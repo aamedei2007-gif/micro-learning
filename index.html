@@ -1,0 +1,1558 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0a0a10">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Sfoglia">
+<link rel="apple-touch-icon" href="icon-192.png">
+<title>Sfoglia — Il TikTok dei libri</title>
+<link rel="manifest" href="manifest.json">
+<style>
+:root{
+  --bg:#0a0a10; --bg2:#12121c; --card:#161622;
+  --txt:#f4f4f8; --mut:#9a9ab0; --line:#26263a;
+  --acc1:#ff5e7e; --acc2:#ffb35c; --cyan:#5ce1e6;
+  --grad:linear-gradient(135deg,var(--acc1),var(--acc2));
+  --tab-h:62px;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;margin:0}
+body{
+  background:#050508;color:var(--txt);
+  font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  overflow:hidden;
+}
+button{font-family:inherit;color:inherit}
+#app{
+  position:relative;max-width:460px;height:100dvh;margin:0 auto;
+  background:var(--bg);overflow:hidden;
+  box-shadow:0 0 90px rgba(0,0,0,.7);
+}
+#bg{position:absolute;inset:0;width:100%;height:100%;z-index:0;opacity:.9}
+.view{position:absolute;inset:0;z-index:1;display:none}
+.view.active{display:block}
+.hidden{display:none!important}
+
+/* ---------- FEED ---------- */
+#feed{
+  position:absolute;inset:0;overflow-y:auto;
+  scroll-snap-type:y mandatory;scrollbar-width:none;
+}
+#feed::-webkit-scrollbar{display:none}
+.card{
+  position:relative;height:100%;scroll-snap-align:start;scroll-snap-stop:always;
+  display:block;overflow:hidden;
+}
+.card::after{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(180deg,rgba(5,5,10,.34),transparent 24%,transparent 66%,rgba(5,5,10,.38));z-index:1}
+.progress{position:absolute;top:calc(57px + env(safe-area-inset-top));left:16px;right:16px;display:flex;gap:5px;z-index:4}
+.seg{flex:1;height:3px;border-radius:3px;background:rgba(255,255,255,.28);overflow:hidden}
+.seg i{display:block;height:100%;width:0;background:#fff;border-radius:3px;transition:width .25s ease}
+.slides-viewport{position:absolute;inset:78px 75px 190px 14px;z-index:2;overflow:hidden;border-radius:28px;box-shadow:0 20px 70px rgba(0,0,0,.38)}
+.slides-track{height:100%;display:flex;overflow-x:auto;overflow-y:hidden;scroll-snap-type:x mandatory;scroll-behavior:smooth;overscroll-behavior-x:contain;scrollbar-width:none;touch-action:pan-x pan-y}
+.slides-track::-webkit-scrollbar{display:none}
+.slide{flex:0 0 100%;width:100%;height:100%;position:relative;scroll-snap-align:center;scroll-snap-stop:always;padding:0}
+.slide-art{--slide-hue:345;height:100%;position:relative;isolation:isolate;overflow:hidden;border:1px solid rgba(255,255,255,.18);border-radius:28px;padding:24px 22px;display:flex;flex-direction:column;justify-content:center;background:radial-gradient(90% 75% at 15% 5%,hsla(var(--slide-hue),90%,70%,.56),transparent 58%),radial-gradient(85% 70% at 100% 100%,hsla(calc(var(--slide-hue) + 75),85%,54%,.42),transparent 55%),linear-gradient(150deg,hsl(var(--slide-hue) 52% 22%),#11111b 83%);}
+.slide:nth-child(2) .slide-art{--slide-hue:194;background:radial-gradient(90% 75% at 15% 5%,rgba(92,225,230,.45),transparent 58%),radial-gradient(85% 70% at 100% 100%,rgba(95,126,255,.4),transparent 55%),linear-gradient(150deg,#172941,#11111b 83%)}
+.slide:nth-child(3) .slide-art{--slide-hue:275;background:radial-gradient(90% 75% at 15% 5%,rgba(188,115,255,.46),transparent 58%),radial-gradient(85% 70% at 100% 100%,rgba(255,94,126,.34),transparent 55%),linear-gradient(150deg,#302047,#11111b 83%)}
+.slide:nth-child(4) .slide-art{--slide-hue:35;background:radial-gradient(90% 75% at 15% 5%,rgba(255,179,92,.5),transparent 58%),radial-gradient(85% 70% at 100% 100%,rgba(255,94,126,.32),transparent 55%),linear-gradient(150deg,#3a291d,#11111b 83%)}
+.slide:nth-child(5) .slide-art{--slide-hue:155;background:radial-gradient(90% 75% at 15% 5%,rgba(89,230,163,.42),transparent 58%),radial-gradient(85% 70% at 100% 100%,rgba(92,225,230,.3),transparent 55%),linear-gradient(150deg,#18372e,#11111b 83%)}
+.slide:nth-child(6) .slide-art{--slide-hue:330;background:radial-gradient(90% 75% at 15% 5%,rgba(255,94,126,.48),transparent 58%),radial-gradient(85% 70% at 100% 100%,rgba(188,115,255,.35),transparent 55%),linear-gradient(150deg,#3a1e32,#11111b 83%)}
+.slide-art::before,.slide-art::after{content:"";position:absolute;z-index:-1;border:1px solid rgba(255,255,255,.12);border-radius:50%;pointer-events:none}
+.slide-art::before{width:250px;height:250px;right:-112px;top:-100px;box-shadow:0 0 0 24px rgba(255,255,255,.025),0 0 0 48px rgba(255,255,255,.02)}
+.slide-art::after{width:140px;height:140px;left:-86px;bottom:12%;box-shadow:0 0 0 18px rgba(255,255,255,.025)}
+.slide-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:auto;color:rgba(255,255,255,.82);font-size:12px;font-weight:800;letter-spacing:.12em;text-transform:uppercase}
+.slide-top .book-emoji{font-size:25px;filter:drop-shadow(0 5px 12px rgba(0,0,0,.25))}
+.slide-copy{padding:22px 0 34px}
+.chip{display:inline-block;font-size:10px;font-weight:900;letter-spacing:.15em;padding:6px 11px;border-radius:99px;background:rgba(255,255,255,.13);border:1px solid rgba(255,255,255,.22);color:#fff;margin-bottom:15px;text-transform:uppercase;backdrop-filter:blur(7px)}
+.scene-text{font-weight:780;line-height:1.22;letter-spacing:-.035em;text-wrap:pretty;text-shadow:0 2px 24px rgba(0,0,0,.24)}
+.scene-text .w{display:inline-block;opacity:0;transform:translateY(12px);animation:win .45s cubic-bezier(.2,.7,.2,1) forwards}
+@keyframes win{to{opacity:1;transform:none}}
+.scene-text.quote{font-family:Georgia,"Times New Roman",serif;font-style:italic;font-weight:600;letter-spacing:-.02em}
+.scene-text.quote::before{content:"❝";display:block;font-size:46px;line-height:.6;margin-bottom:14px;color:#ffd58f}
+.slide-bottom{display:flex;align-items:center;gap:8px;margin-top:auto;color:rgba(255,255,255,.72);font-size:11px;font-weight:700;letter-spacing:.04em}
+.slide-bottom .line{height:1px;flex:1;background:rgba(255,255,255,.2)}
+.slide-nav{position:absolute;left:18px;right:84px;bottom:151px;z-index:5;display:flex;align-items:center;justify-content:center;gap:14px}
+.slide-nav button{width:34px;height:34px;border-radius:50%;border:1px solid rgba(255,255,255,.2);background:rgba(19,19,29,.68);backdrop-filter:blur(8px);font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.slide-nav button:disabled{opacity:.3;cursor:default}
+.slide-nav span{font-size:11px;color:rgba(255,255,255,.75);font-weight:800;letter-spacing:.08em;min-width:42px;text-align:center}
+.slide-nav .dots{display:flex;gap:4px;align-items:center}
+.slide-nav .dots i{width:5px;height:5px;border-radius:50%;background:rgba(255,255,255,.35)}
+.slide-nav .dots i.active{width:15px;border-radius:9px;background:#fff}
+.pause-ic{position:absolute;inset:78px 75px 190px 14px;border-radius:28px;display:flex;align-items:center;justify-content:center;z-index:4;pointer-events:none;opacity:0;transition:opacity .2s}
+.pause-ic span{width:66px;height:66px;border-radius:50%;background:rgba(10,10,16,.52);display:flex;align-items:center;justify-content:center;font-size:26px;backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,.2)}
+.card.paused .pause-ic{opacity:1}
+.pause-ic{
+  position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+  z-index:4;pointer-events:none;opacity:0;transition:opacity .2s;
+}
+.pause-ic span{
+  width:74px;height:74px;border-radius:50%;background:rgba(10,10,16,.55);
+  display:flex;align-items:center;justify-content:center;font-size:30px;
+  backdrop-filter:blur(6px);border:1px solid rgba(255,255,255,.15);
+}
+.card.paused .pause-ic{opacity:1}
+.done-badge{
+  position:absolute;top:96px;left:22px;z-index:3;font-size:12px;font-weight:700;
+  background:rgba(60,220,130,.16);color:#7de8a8;border:1px solid rgba(60,220,130,.35);
+  padding:5px 10px;border-radius:99px;opacity:0;transition:opacity .3s;
+}
+.card.completed .done-badge{opacity:1}
+.rail{
+  position:absolute;right:12px;bottom:150px;z-index:3;
+  display:flex;flex-direction:column;align-items:center;gap:18px;
+}
+.rail .disc{
+  width:50px;height:50px;border-radius:50%;background:var(--grad);
+  display:flex;align-items:center;justify-content:center;font-size:24px;
+  border:3px solid rgba(255,255,255,.25);animation:spin 9s linear infinite;
+  box-shadow:0 4px 18px rgba(0,0,0,.4);
+}
+@keyframes spin{to{transform:rotate(360deg)}}
+.rail button{
+  background:none;border:0;display:flex;flex-direction:column;align-items:center;gap:3px;
+  cursor:pointer;padding:0;
+}
+.rail .ic{font-size:29px;filter:drop-shadow(0 2px 8px rgba(0,0,0,.5));transition:transform .15s}
+.rail button:active .ic{transform:scale(1.25)}
+.rail .n{font-size:11px;font-weight:700;color:#fff;text-shadow:0 1px 6px rgba(0,0,0,.7)}
+.rail button.on .ic{color:var(--acc1)}
+.rail button[data-act="save"]:not(.on) .ic{filter:grayscale(1) opacity(.75)}
+.meta{position:absolute;left:22px;right:86px;bottom:96px;z-index:3}
+.meta .handle{font-weight:800;font-size:15px;margin-bottom:5px}
+.meta .ltitle{font-size:14px;line-height:1.35;color:#e8e8f2;margin-bottom:6px;
+  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.meta .sub{font-size:12px;color:var(--mut)}
+.meta .demo-tag{display:inline-block;margin-left:6px;font-size:10px;font-weight:800;
+  background:rgba(255,179,92,.18);color:var(--acc2);padding:2px 7px;border-radius:99px;vertical-align:1px}
+.swipe-hint{
+  position:absolute;bottom:calc(var(--tab-h) + 14px);left:0;right:0;z-index:3;
+  text-align:center;font-size:12px;color:var(--mut);animation:bob 1.6s ease-in-out infinite;
+}
+@keyframes bob{50%{transform:translateY(-5px)}}
+.heart-burst{position:absolute;z-index:5;font-size:80px;pointer-events:none;
+  animation:burst .8s ease-out forwards;transform:translate(-50%,-50%)}
+@keyframes burst{0%{opacity:0;transform:translate(-50%,-50%) scale(.3)}
+  25%{opacity:1;transform:translate(-50%,-50%) scale(1.15)}
+  100%{opacity:0;transform:translate(-50%,-70%) scale(1)}}
+.feed-top{
+  position:absolute;top:0;left:0;right:0;z-index:4;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:calc(10px + env(safe-area-inset-top)) 16px 8px;
+  background:linear-gradient(180deg,rgba(5,5,10,.75),transparent);
+}
+.logo{font-weight:900;font-size:19px;letter-spacing:-.02em}
+.logo em{font-style:normal;background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+.top-actions{display:flex;gap:8px}
+.icon-btn{
+  width:38px;height:38px;border-radius:50%;border:1px solid rgba(255,255,255,.14);
+  background:rgba(10,10,16,.45);backdrop-filter:blur(6px);cursor:pointer;font-size:16px;
+  display:flex;align-items:center;justify-content:center;
+}
+
+/* ---------- TAB BAR ---------- */
+#tabbar{
+  position:absolute;left:0;right:0;bottom:0;z-index:10;height:calc(var(--tab-h) + env(safe-area-inset-bottom));
+  padding-bottom:env(safe-area-inset-bottom);
+  display:flex;align-items:stretch;justify-content:space-around;
+  background:rgba(8,8,14,.92);backdrop-filter:blur(14px);border-top:1px solid var(--line);
+}
+#tabbar button{
+  flex:1;background:none;border:0;cursor:pointer;color:var(--mut);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;
+  font-size:10px;font-weight:700;
+}
+#tabbar button.active{color:#fff}
+#tabbar svg{width:23px;height:23px;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+#tabbar .create{flex:0 0 64px}
+#tabbar .create .plus{
+  width:44px;height:32px;border-radius:10px;background:var(--grad);color:#1b0a10;
+  display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:900;
+  box-shadow:0 3px 14px rgba(255,94,126,.4);
+}
+
+/* ---------- GENERIC VIEWS ---------- */
+.page{position:absolute;inset:0;overflow-y:auto;padding:calc(18px + env(safe-area-inset-top)) 18px calc(var(--tab-h) + 30px);scrollbar-width:none}
+.page::-webkit-scrollbar{display:none}
+.page h1{font-size:24px;margin:0 0 4px;letter-spacing:-.02em}
+.page .lead{color:var(--mut);font-size:13px;margin:0 0 18px}
+.search{
+  width:100%;padding:13px 16px;border-radius:14px;border:1px solid var(--line);
+  background:var(--card);color:var(--txt);font-size:15px;outline:none;margin-bottom:16px;
+}
+.search:focus{border-color:var(--acc1)}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.book{
+  border:1px solid var(--line);border-radius:16px;overflow:hidden;cursor:pointer;
+  background:var(--card);transition:transform .15s;text-align:left;padding:0;
+}
+.book:active{transform:scale(.97)}
+.cover{aspect-ratio:3/4;display:flex;flex-direction:column;justify-content:space-between;padding:14px;position:relative;overflow:hidden}
+.cover .emo{font-size:44px;filter:drop-shadow(0 4px 10px rgba(0,0,0,.35))}
+.cover .ct{font-weight:900;font-size:16px;line-height:1.2;color:#fff;text-shadow:0 2px 10px rgba(0,0,0,.4)}
+.cover .ca{font-size:11px;color:rgba(255,255,255,.85);margin-top:4px}
+.cover .gen{position:absolute;top:10px;right:10px;font-size:9px;font-weight:900;letter-spacing:.08em;
+  background:rgba(0,0,0,.4);color:#fff;padding:3px 7px;border-radius:99px}
+.book .binfo{padding:10px 12px;font-size:12px;color:var(--mut)}
+.cta-card{
+  grid-column:1/-1;border:1.5px dashed rgba(255,94,126,.5);border-radius:16px;
+  padding:18px;text-align:center;cursor:pointer;background:rgba(255,94,126,.06);
+}
+.cta-card b{display:block;font-size:15px;margin-bottom:4px}
+.cta-card span{font-size:12px;color:var(--mut)}
+.empty{text-align:center;color:var(--mut);padding:60px 20px;font-size:14px;line-height:1.6}
+.empty .big{font-size:44px;display:block;margin-bottom:12px}
+
+/* ---------- LISTS ---------- */
+.lrow{
+  display:flex;gap:12px;align-items:center;padding:13px 14px;border:1px solid var(--line);
+  border-radius:14px;background:var(--card);margin-bottom:10px;cursor:pointer;width:100%;text-align:left;
+}
+.lrow:active{transform:scale(.98)}
+.lrow .n{
+  flex:0 0 34px;height:34px;border-radius:10px;background:var(--grad);color:#1b0a10;
+  display:flex;align-items:center;justify-content:center;font-weight:900;font-size:14px;
+}
+.lrow .t{flex:1;min-width:0}
+.lrow .t b{display:block;font-size:14px;margin-bottom:2px}
+.lrow .t span{font-size:12px;color:var(--mut)}
+.lrow .st{font-size:16px}
+
+/* ---------- PROFILE ---------- */
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:16px 0 22px}
+.stat{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px 6px;text-align:center}
+.stat b{display:block;font-size:19px;background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+.stat span{font-size:10px;color:var(--mut);font-weight:700}
+.section-t{font-size:12px;font-weight:800;letter-spacing:.1em;color:var(--mut);text-transform:uppercase;margin:22px 0 10px}
+.panel{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px;margin-bottom:12px}
+.panel label{display:block;font-size:13px;font-weight:700;margin-bottom:8px}
+.panel input[type=password],.panel input[type=text],.panel select{
+  width:100%;padding:11px 12px;border-radius:10px;border:1px solid var(--line);
+  background:var(--bg2);color:var(--txt);font-size:14px;outline:none;margin-bottom:10px;
+}
+.panel input:focus,.panel select:focus{border-color:var(--acc1)}
+.panel .hint{font-size:12px;color:var(--mut);line-height:1.5;margin:0 0 10px}
+.panel a{color:var(--cyan)}
+.row{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px}
+.row:last-child{margin-bottom:0}
+.row .rl{font-size:14px;font-weight:600}
+.row .rs{font-size:11px;color:var(--mut)}
+input[type=range]{width:130px;accent-color:var(--acc1)}
+.switch{position:relative;width:46px;height:26px;flex:0 0 46px}
+.switch input{opacity:0;width:0;height:0}
+.switch i{position:absolute;inset:0;border-radius:99px;background:var(--line);transition:.2s;cursor:pointer}
+.switch i::after{content:"";position:absolute;width:20px;height:20px;border-radius:50%;background:#fff;top:3px;left:3px;transition:.2s}
+.switch input:checked + i{background:var(--acc1)}
+.switch input:checked + i::after{left:23px}
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:8px;
+  padding:12px 18px;border-radius:12px;border:0;cursor:pointer;
+  font-size:14px;font-weight:800;background:var(--grad);color:#1b0a10;
+}
+.btn.ghost{background:var(--bg2);color:var(--txt);border:1px solid var(--line)}
+.btn.danger{background:rgba(255,80,80,.12);color:#ff8080;border:1px solid rgba(255,80,80,.3)}
+.btn.block{width:100%}
+.btn:disabled{opacity:.5;cursor:default}
+.linklike{background:none;border:0;color:var(--cyan);font-size:12px;cursor:pointer;padding:0;text-decoration:underline}
+
+/* ---------- MODALS ---------- */
+.modal{position:absolute;inset:0;z-index:30;display:none}
+.modal.open{display:block}
+.modal .shade{position:absolute;inset:0;background:rgba(3,3,8,.7);backdrop-filter:blur(4px)}
+.sheet{
+  position:absolute;left:0;right:0;bottom:0;max-height:88%;
+  background:var(--bg2);border-radius:22px 22px 0 0;border-top:1px solid var(--line);
+  padding:18px 18px calc(20px + env(safe-area-inset-bottom));overflow-y:auto;
+  animation:up .28s cubic-bezier(.2,.8,.2,1);
+}
+@keyframes up{from{transform:translateY(40px);opacity:0}}
+.sheet h2{margin:0 0 4px;font-size:20px;letter-spacing:-.02em}
+.sheet .sub{color:var(--mut);font-size:13px;margin:0 0 16px}
+.sheet .x{position:absolute;top:14px;right:14px;width:32px;height:32px;border-radius:50%;
+  border:1px solid var(--line);background:var(--card);cursor:pointer;font-size:14px}
+.field{margin-bottom:14px}
+.field label{display:block;font-size:12px;font-weight:800;color:var(--mut);margin-bottom:6px;text-transform:uppercase;letter-spacing:.06em}
+.field input,.field select,.field textarea{
+  width:100%;padding:13px 14px;border-radius:12px;border:1px solid var(--line);
+  background:var(--card);color:var(--txt);font-size:15px;outline:none;font-family:inherit;
+}
+.field textarea{min-height:84px;resize:vertical;line-height:1.45}
+.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--acc1)}
+.book-results{display:flex;flex-direction:column;gap:7px;margin-top:8px}
+.book-result{width:100%;text-align:left;padding:10px 12px;border:1px solid var(--line);border-radius:11px;background:var(--card);cursor:pointer}
+.book-result:hover,.book-result:focus{border-color:var(--acc1)}
+.book-result b{display:block;font-size:13px;margin-bottom:3px}
+.book-result span{font-size:11px;color:var(--mut)}
+.book-result .bdesc{display:block;margin-top:5px;line-height:1.4;max-height:34px;overflow:hidden}
+.book-selected{font-size:11px;color:#7de8a8;padding:7px 10px;border-radius:9px;background:rgba(60,220,130,.1)}
+.gen-status{display:none;margin-top:16px;padding:16px;border-radius:14px;background:var(--card);border:1px solid var(--line)}
+.gen-status.show{display:block}
+.gen-step{display:flex;align-items:center;gap:10px;font-size:13px;color:var(--mut);padding:5px 0}
+.gen-step .dot{width:8px;height:8px;border-radius:50%;background:var(--line);flex:0 0 8px}
+.gen-step.on{color:var(--txt)}
+.gen-step.on .dot{background:var(--acc1);animation:pulse 1s infinite}
+.gen-step.ok{color:#7de8a8}
+.gen-step.ok .dot{background:#3cdc82}
+@keyframes pulse{50%{opacity:.3}}
+.key-chip{display:inline-flex;align-items:center;gap:6px;font-size:11px;font-weight:800;
+  padding:5px 10px;border-radius:99px;margin-bottom:14px}
+.key-chip.real{background:rgba(60,220,130,.14);color:#7de8a8;border:1px solid rgba(60,220,130,.3)}
+.key-chip.demo{background:rgba(255,179,92,.14);color:var(--acc2);border:1px solid rgba(255,179,92,.3)}
+.book-head{display:flex;gap:14px;margin-bottom:16px}
+.book-head .mini{width:74px;flex:0 0 74px;border-radius:12px;overflow:hidden}
+.book-head .mini .cover{aspect-ratio:3/4;padding:8px}
+.book-head .mini .emo{font-size:26px}
+.book-head .mini .ct{font-size:11px}
+.book-head .mini .ca{font-size:9px}
+.book-head .bh{flex:1;min-width:0}
+.book-head .bh h2{font-size:18px;margin-bottom:4px}
+.book-head .bh p{margin:0;font-size:13px;color:var(--mut)}
+
+/* ---------- INTRO / TOAST ---------- */
+#intro{
+  position:absolute;inset:0;z-index:50;background:var(--bg);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  text-align:center;padding:30px;
+}
+#intro .i-logo{font-size:64px;margin-bottom:14px;animation:bob 2.4s ease-in-out infinite}
+#intro h1{font-size:34px;margin:0 0 8px;letter-spacing:-.03em}
+#intro h1 em{font-style:normal;background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+#intro p{color:var(--mut);font-size:15px;line-height:1.55;max-width:300px;margin:0 0 26px}
+#intro .feats{display:flex;flex-direction:column;gap:10px;margin-bottom:30px;text-align:left}
+#intro .feat{display:flex;gap:10px;align-items:center;font-size:13px;color:#d8d8e6}
+#intro .feat span{font-size:18px}
+#toast{
+  position:absolute;left:50%;bottom:calc(var(--tab-h) + 22px);transform:translateX(-50%) translateY(20px);
+  z-index:60;background:#1e1e2e;border:1px solid var(--line);color:var(--txt);
+  padding:11px 18px;border-radius:99px;font-size:13px;font-weight:600;
+  opacity:0;pointer-events:none;transition:.25s;max-width:88%;text-align:center;
+  box-shadow:0 8px 30px rgba(0,0,0,.5);
+}
+#toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+@media (max-height:700px){
+  .slides-viewport{top:72px;bottom:178px}
+  .pause-ic{top:72px;bottom:178px}
+  .slide-art{padding:18px 18px}
+  .slide-copy{padding:12px 0 22px}
+  .rail{gap:13px}
+}
+@media (max-width:360px){
+  .slides-viewport{right:70px;left:10px}
+  .slide-art{padding:18px 16px}
+  .scene-text{letter-spacing:-.045em}
+  .slide-nav{left:12px;right:76px}
+}
+@media (prefers-reduced-motion:reduce){
+  *{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important}
+}
+</style>
+</head>
+<body>
+<div id="app">
+  <canvas id="bg"></canvas>
+
+  <!-- FEED -->
+  <div class="view active" id="view-feed">
+    <div id="feed"></div>
+    <div class="feed-top">
+      <div class="logo">📚 <em>Sfoglia</em></div>
+      <div class="top-actions">
+        <button class="icon-btn" id="audioBtn" title="Audio on/off">🔊</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- SCOPRI -->
+  <div class="view" id="view-scopri">
+    <div class="page">
+      <h1>Scopri</h1>
+      <p class="lead">Ogni libro diventa una serie di micro-lezioni. Nessun upload: genera tutto l'app.</p>
+      <input class="search" id="searchInput" placeholder="Cerca un libro o un autore…" autocomplete="off">
+      <div class="grid" id="bookGrid"></div>
+    </div>
+  </div>
+
+  <!-- SALVATI -->
+  <div class="view" id="view-salvati">
+    <div class="page">
+      <h1>Salvati</h1>
+      <p class="lead">Le micro-lezioni che vuoi rivedere.</p>
+      <div id="savedList"></div>
+    </div>
+  </div>
+
+  <!-- PROFILO -->
+  <div class="view" id="view-profilo">
+    <div class="page">
+      <h1>Profilo</h1>
+      <p class="lead">I tuoi progressi e le impostazioni. Tutto resta sul tuo dispositivo.</p>
+      <div class="stats">
+        <div class="stat"><b id="stDone">0</b><span>LEZIONI</span></div>
+        <div class="stat"><b id="stBooks">0</b><span>LIBRI</span></div>
+        <div class="stat"><b id="stMin">0</b><span>MINUTI</span></div>
+        <div class="stat"><b id="stStreak">0</b><span>STREAK 🔥</span></div>
+      </div>
+
+      <div class="section-t">Generazione IA</div>
+      <div class="panel">
+        <label>Chiave API Gemini (gratuita)</label>
+        <p class="hint">Senza chiave l'app usa la libreria demo. Con una chiave di Google AI Studio puoi provare Gemini Flash con la quota gratuita, soggetta a limiti. La chiave resta nel browser; titolo, capitolo, descrizione trovata e appunti vengono inviati a Google. Nel livello gratuito i contenuti possono essere usati per migliorare i prodotti Google. La ricerca Google Books trova schede e metadati, non il testo integrale dei libri.</p>
+        <input type="password" id="keyInput" placeholder="Incolla qui la chiave…" autocomplete="off">
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <button class="btn" id="saveKey">Salva chiave</button>
+          <a class="btn ghost" href="https://aistudio.google.com/api-keys" target="_blank" rel="noopener">Ottienila gratis ↗</a>
+        </div>
+        <p class="hint" style="margin-top:10px" id="keyStatus"></p>
+      </div>
+
+      <div class="section-t">Riproduzione</div>
+      <div class="panel">
+        <div class="row">
+          <div><div class="rl">Narrazione audio</div><div class="rs">Voce sintetica del browser, gratuita</div></div>
+          <label class="switch"><input type="checkbox" id="setAudio" checked><i></i></label>
+        </div>
+        <div class="row">
+          <div><div class="rl">Velocità voce</div><div class="rs" id="rateVal">1.0×</div></div>
+          <input type="range" id="setRate" min="0.8" max="1.3" step="0.05" value="1">
+        </div>
+        <div class="row" style="display:block">
+          <div class="rl" style="margin-bottom:8px">Voce</div>
+          <select id="setVoice"></select>
+        </div>
+      </div>
+
+      <div class="section-t">I tuoi libri generati</div>
+      <div id="genList"></div>
+
+      <div class="section-t">Dati</div>
+      <div class="panel">
+        <button class="btn danger block" id="resetBtn">Azzera tutti i dati locali</button>
+      </div>
+      <p style="text-align:center;color:var(--mut);font-size:11px;margin:20px 0">Sfoglia · prototipo gratuito · nessun server, nessun account</p>
+    </div>
+  </div>
+
+  <!-- TAB BAR -->
+  <nav id="tabbar">
+    <button data-view="feed" class="active">
+      <svg viewBox="0 0 24 24"><path d="M3 10.5 12 3l9 7.5"/><path d="M5 9.5V21h14V9.5"/></svg>
+      Per te
+    </button>
+    <button data-view="scopri">
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="m15.5 8.5-2 5-5 2 2-5z"/></svg>
+      Scopri
+    </button>
+    <button class="create" id="createBtn"><span class="plus">+</span>Crea</button>
+    <button data-view="salvati">
+      <svg viewBox="0 0 24 24"><path d="M6 3h12v18l-6-4-6 4z"/></svg>
+      Salvati
+    </button>
+    <button data-view="profilo">
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c1.5-4 5-6 8-6s6.5 2 8 6"/></svg>
+      Profilo
+    </button>
+  </nav>
+
+  <!-- GENERATORE -->
+  <div class="modal" id="genModal">
+    <div class="shade" data-close></div>
+    <div class="sheet">
+      <button class="x" data-close>✕</button>
+      <h2>✨ Genera un libro</h2>
+      <p class="sub">Scrivi un titolo: l'IA lo trasforma in micro-lezioni verticali, pronte da sfogliare.</p>
+      <div id="keyChip"></div>
+      <div class="field">
+        <label>Cerca un libro *</label>
+        <input id="genTitle" placeholder="Titolo o autore, es. Il nome della rosa" autocomplete="off">
+        <div class="hint" style="margin:6px 2px 0">Cerchiamo edizioni e metadati su Google Books, con Open Library come alternativa. I cataloghi non recuperano automaticamente il testo completo del libro.</div>
+        <div id="bookResults" class="book-results"></div>
+      </div>
+      <div class="field">
+        <label>Autore (opzionale)</label>
+        <input id="genAuthor" placeholder="Es. Umberto Eco" autocomplete="off">
+      </div>
+      <div class="field">
+        <label>Capitolo o argomento (facoltativo)</label>
+        <input id="genChapter" placeholder="Es. Capitolo 3: Il labirinto" autocomplete="off">
+      </div>
+      <div class="field">
+        <label>I tuoi appunti sul capitolo (facoltativi)</label>
+        <textarea id="genNotes" maxlength="2500" placeholder="Aggiungi appunti brevi per rendere la spiegazione più precisa (max 2.500 caratteri). Non incollare un capitolo intero."></textarea>
+      </div>
+      <div class="field">
+        <label>Numero di micro-lezioni</label>
+        <select id="genCount"><option>3</option><option selected>4</option><option>5</option><option>6</option></select>
+      </div>
+      <div class="hint" style="margin:0 0 12px">Nota privacy: con Gemini, titolo, capitolo e appunti vengono inviati a Google. Nel livello gratuito i prompt possono essere usati per migliorare i prodotti Google.</div>
+      <button class="btn block" id="genBtn">Genera micro-lezioni ✨</button>
+      <div class="gen-status" id="genStatus"></div>
+    </div>
+  </div>
+
+  <!-- SCHEDA LIBRO -->
+  <div class="modal" id="bookModal">
+    <div class="shade" data-close></div>
+    <div class="sheet" id="bookSheet"></div>
+  </div>
+
+  <!-- INTRO -->
+  <div id="intro">
+    <div class="i-logo">📚</div>
+    <h1><em>Sfoglia</em></h1>
+    <p>Il TikTok dei libri. Scorri in orizzontale le slide di una lezione, in verticale per passare al libro successivo. Gratis, senza account.</p>
+    <div class="feats">
+      <div class="feat"><span>✨</span> Scrivi un titolo → l'app crea le micro-lezioni</div>
+      <div class="feat"><span>↔️</span> Slide sfogliabili, senza avanzamento automatico</div>
+      <div class="feat"><span>🎧</span> Voce in pausa/ripresa sullo stesso punto</div>
+      <div class="feat"><span>🆓</span> Nessun costo, nessun upload di utenti</div>
+    </div>
+    <button class="btn" id="startBtn" style="padding:15px 34px;font-size:16px">Inizia a sfogliare →</button>
+  </div>
+
+  <div id="toast"></div>
+</div>
+
+<script>
+"use strict";
+/* =========================================================
+   SFOGLIA — prototipo di microlearning verticale
+   Tutto client-side: feed, player, TTS, storage locale.
+   IA opzionale: Gemini (free tier) con chiave dell'utente.
+   ========================================================= */
+
+/* ---------- DATI: libreria demo (contenuti originali) ---------- */
+const BOOKS = [
+{
+  id:"piccolo-principe", title:"Il Piccolo Principe", author:"Antoine de Saint-Exupéry", emoji:"🌹", hue:345,
+  lessons:[
+    {title:"Il segreto della volpe",
+     hook:"«Non si vede bene che col cuore. L'essenziale è invisibile agli occhi.» È la frase più famosa del Piccolo Principe, ma cosa significa davvero?",
+     points:[
+       "Il piccolo principe incontra una volpe che gli chiede di essere addomesticata: cioè creare un legame, diventare unici l'uno per l'altra.",
+       "Prima del legame, la volpe è uguale a centomila altre volpi. Dopo, è unica al mondo. Le cose diventano preziose solo attraverso le relazioni.",
+       "L'essenziale — l'amore, l'amicizia, il senso — non si misura con gli occhi: si sente. Per questo i grandi, ossessionati dai numeri, non lo vedono."],
+     quote:"«Gli occhi sono ciechi. Bisogna cercare col cuore.»",
+     takeaway:"Oggi chiediti: quali legami sto coltivando? Sono loro a rendere la tua vita unica."},
+    {title:"Il tempo della tua rosa",
+     hook:"Il piccolo principe scopre un giardino con cinquemila rose identiche alla sua. E scoppia a piangere: la sua rosa non era unica?",
+     points:[
+       "La volpe gli rivela il segreto: è il tempo che hai dedicato alla tua rosa a renderla così importante.",
+       "Il valore non è nell'oggetto in sé, ma nella cura che gli hai dato. Annaffiarla, proteggerla, ascoltarla: questo l'ha resa tua.",
+       "Lo stesso vale per le persone: non ami qualcuno perché è perfetto, ma perché ci hai costruito qualcosa insieme."],
+     quote:"«È il tempo che hai perduto per la tua rosa che ha fatto la tua rosa così importante.»",
+     takeaway:"Dedica tempo a ciò che vuoi rendere prezioso. Il valore nasce dalla cura, non dal caso."},
+    {title:"I grandi e i numeri",
+     hook:"Nel suo viaggio il piccolo principe incontra un uomo d'affari che conta le stelle. Dice di possederle. Ma possedere, cosa vuol dire?",
+     points:[
+       "L'uomo d'affari conta le stelle e le 'deposita in banca'. Non le guarda, non ne gode: le possiede e basta.",
+       "Il piccolo principe obietta: io possiedo una rosa e la annaffio ogni giorno. Io sono utile alla mia rosa. Tu alle stelle non sei utile.",
+       "Saint-Exupéry critica un'idea di successo fatta solo di accumulo: contare non è vivere."],
+     quote:"«I grandi amano le cifre. Quando parlate di un nuovo amico, non vi chiedono mai l'essenziale.»",
+     takeaway:"Chiediti: sto contando le mie stelle, o le sto guardando davvero?"},
+    {title:"Tutti i grandi sono stati bambini",
+     hook:"Il libro si apre con un disegno: un boa che ha mangiato un elefante. Tutti i grandi vedono solo un cappello.",
+     points:[
+       "Il narratore da bambino smette di disegnare perché gli adulti non capiscono. Diventa pilota, ma resta solo con la sua immaginazione.",
+       "Solo il piccolo principe riconosce il disegno. I bambini vedono oltre l'apparenza: vedono possibilità.",
+       "La dedica del libro è a un adulto, 'quando era un bambino'. Il messaggio: non perdere quello sguardo."],
+     quote:"«Tutti i grandi sono stati bambini una volta. Ma pochi di essi se ne ricordano.»",
+     takeaway:"Oggi guarda qualcosa con occhi da bambino: chiediti 'cosa potrebbe essere?' invece di 'cos'è?'"}
+  ]
+},
+{
+  id:"sapiens", title:"Sapiens. Da animali a dèi", author:"Yuval Noah Harari", emoji:"🌍", hue:205,
+  lessons:[
+    {title:"Perché abbiamo vinto noi",
+     hook:"Centomila anni fa sulla Terra c'erano almeno sei specie umane. Oggi ne resta una: noi. Perché proprio Homo sapiens?",
+     points:[
+       "Non eravamo i più forti: i Neanderthal erano più robusti. La nostra arma segreta era il linguaggio.",
+       "La rivoluzione cognitiva ci ha permesso di parlare di cose che non esistono: miti, leggi, nazioni, denaro.",
+       "Queste 'finzioni condivise' permettono a milioni di sconosciuti di cooperare. Nessun'altra specie sa farlo su questa scala."],
+     quote:"«Sapiens domina il mondo perché è l'unico animale che può cooperare in modo flessibile in grandi numeri.»",
+     takeaway:"Le storie che raccontiamo — non i muscoli — sono il vero superpotere della nostra specie."},
+    {title:"Il grano ci ha addomesticato",
+     hook:"E se la rivoluzione agricola non fosse stata un progresso, ma 'la più grande frode della storia'?",
+     points:[
+       "Harari ribalta la storia: non siamo noi ad aver addomesticato il grano. È il grano ad aver addomesticato noi.",
+       "Prima di coltivare, i cacciatori-raccoglitori lavoravano meno ore, mangiavano più varietà, si ammalavano meno.",
+       "Il grano ci ha costretto a vivere in un posto solo, a spaccarci la schiena nei campi, a dipendere da un solo raccolto."],
+     quote:"«La rivoluzione agricola è la più grande frode della storia.»",
+     takeaway:"Più comfort non significa più felicità. Ogni progresso ha un prezzo nascosto: chiediti sempre quale."},
+    {title:"Il denaro è fiducia",
+     hook:"Perché un pezzo di carta ti permette di comprare il pane? Il denaro non ha valore in sé: è pura fiducia.",
+     points:[
+       "Il denaro è il sistema di fiducia reciproca più universale mai inventato: funziona anche tra chi si odia.",
+       "Due persone che non condividono lingua, religione o cultura possono comunque fare affari: si fidano della stessa moneta.",
+       "Non sono le monete ad avere valore: è la storia condivisa che tutti accettiamo. Quando la fiducia crolla, il denaro evapora."],
+     quote:"«Il denaro è il più universale ed efficiente sistema di mutua fiducia mai inventato.»",
+     takeaway:"Ogni volta che paghi, partecipi a una storia collettiva. La tua fiducia la tiene in vita."},
+    {title:"Siamo più felici?",
+     hook:"Abbiamo più cibo, più salute, più potere di ogni generazione precedente. Ma siamo davvero più felici?",
+     points:[
+       "Harari chiude il libro con la domanda più scomoda: il progresso ha aumentato la felicità, o solo le aspettative?",
+       "La felicità dipende in gran parte dalle aspettative: se ti aspetti di più, ogni risultato delude.",
+       "La biochimica del piacere si adatta: ciò che ieri era un lusso oggi è normale. Continuiamo a correre, restando allo stesso punto."],
+     quote:"«Non c'è prova che la felicità aumenti col progresso.»",
+     takeaway:"Prima di chiedere 'cosa posso ottenere di più?', chiediti 'cosa posso aspettarmi di meno?'"}
+  ]
+},
+{
+  id:"atomic-habits", title:"Piccole abitudini per grandi cambiamenti", author:"James Clear", emoji:"⚛️", hue:150,
+  lessons:[
+    {title:"L'1% che cambia tutto",
+     hook:"Migliorare dell'1% ogni giorno sembra niente. Ma in un anno diventi 37 volte migliore. Ecco perché.",
+     points:[
+       "Le abitudini sono l'interesse composto del miglioramento: piccoli guadagni che si moltiplicano nel tempo.",
+       "1,01 alla potenza di 365 fa circa 37,8. Peggiorare dell'1% ogni giorno, invece, ti porta quasi a zero.",
+       "I risultati arrivano in ritardo: nei primi giorni non vedi nulla e molli. Devi attraversare il 'plateau del potenziale latente'."],
+     quote:"«Le abitudini sono l'interesse composto del miglioramento di sé.»",
+     takeaway:"Non cercare la svolta. Cerca l'1% di oggi: il tempo farà il resto."},
+    {title:"Obiettivi vs sistemi",
+     hook:"Tutti hanno obiettivi. Anche chi fallisce aveva obiettivi. Allora gli obiettivi non sono la differenza: e tu, hai un sistema?",
+     points:[
+       "James Clear: 'Non ti elevi al livello dei tuoi obiettivi. Scendi al livello dei tuoi sistemi.'",
+       "L'obiettivo è il risultato che vuoi; il sistema è il processo quotidiano che ti ci porta. Vince chi si innamora del processo.",
+       "Se migliori ogni giorno, il risultato si aggiusta da solo. Concentrati sul sistema, non sul traguardo."],
+     quote:"«Gli obiettivi servono per stabilire una direzione, ma i sistemi sono la chiave per progredire.»",
+     takeaway:"Scrivi il tuo obiettivo, poi dimenticalo. Progetta il sistema che lo rende inevitabile."},
+    {title:"La regola dei 2 minuti",
+     hook:"Vuoi leggere di più? Non iniziare con 'un capitolo al giorno'. Inizia con 'una pagina'. Sembra troppo poco? È il punto.",
+     points:[
+       "Rendi l'abitudine così facile da non poter dire di no: 'correre 5 km' diventa 'mettermi le scarpe da corsa'.",
+       "La regola dei 2 minuti: la nuova abitudine deve richiedere meno di due minuti. È la porta d'ingresso, non l'allenamento.",
+       "Una volta iniziata, è più facile continuare. La parte difficile è sempre cominciare: riduci l'attrito."],
+     quote:"«Un'abitudine deve essere stabilita prima di poter essere migliorata.»",
+     takeaway:"Qual è la versione da 2 minuti della tua abitudine? Fallo oggi."},
+    {title:"Cambia identità, non risultati",
+     hook:"Due persone rifiutano una sigaretta. Una dice 'sto cercando di smettere'. L'altra: 'non fumo'. Differenza enorme.",
+     points:[
+       "Il cambiamento vero ha tre livelli: risultati, processi, identità. Il più potente è l'identità: chi credo di essere.",
+       "Non 'voglio leggere un libro', ma 'sono un lettore'. Ogni azione è un voto per la persona che vuoi diventare.",
+       "Ogni pagina letta è un voto per 'sono un lettore'. Non serve la perfezione: serve la maggioranza dei voti."],
+     quote:"«Ogni azione è un voto per il tipo di persona che desideri diventare.»",
+     takeaway:"Chiediti: cosa farebbe una persona che si definisce lettrice? Poi fallo."}
+  ]
+},
+{
+  id:"1984", title:"1984", author:"George Orwell", emoji:"👁️", hue:0,
+  lessons:[
+    {title:"Il Grande Fratello",
+     hook:"«Il Grande Fratello ti guarda». Nel mondo di 1984 non sei mai solo: e non perché qualcuno ti tiene compagnia.",
+     points:[
+       "Oceania è governata dal Partito, che sorveglia ogni cittadino con i teleschermi: non puoi spegnerli, ti guardano e ti ascoltano.",
+       "Winston Smith lavora al Ministero della Verità: riscrive il passato. Chi controlla il passato controlla il futuro.",
+       "La sorveglianza non serve solo a punire: serve a farti comportare come se fossi sempre osservato. Ti autocensuri."],
+     quote:"«Chi controlla il passato controlla il futuro. Chi controlla il presente controlla il passato.»",
+     takeaway:"La libertà inizia dalla privacy: dove non puoi essere te stesso, non sei libero."},
+    {title:"La Neolingua",
+     hook:"E se ti togliessero le parole per pensare? In 1984 il Partito inventa la Neolingua: una lingua che si rimpicciolisce ogni anno.",
+     points:[
+       "Lo scopo della Neolingua è eliminare parole: meno parole hai, meno pensieri puoi fare. Il dissenso diventa impensabile.",
+       "'Bontà' sparisce: resta 'buono'. Il male si dice 'non-buono'. Le sfumature morali svaniscono, resta solo la linea del Partito.",
+       "Orwell ci avverte: il linguaggio non descrive il pensiero, lo costruisce. Difendi le parole, difendi la libertà."],
+     quote:"«Non vedi che lo scopo della Neolingua è restringere i limiti del pensiero?»",
+     takeaway:"Arricchisci il tuo vocabolario: ogni parola in più è un pensiero in più che puoi fare."},
+    {title:"Il Bipensiero",
+     hook:"2 + 2 = 5, se lo dice il Partito. E la cosa peggiore è che devi crederci davvero. Si chiama Bipensiero.",
+     points:[
+       "Il Bipensiero è credere simultaneamente a due idee contraddittorie, sapendo che si contraddicono, e crederle entrambe.",
+       "Il Partito dice: 'Guerra è pace. Libertà è schiavitù. Ignoranza è forza'. I cittadini devono accettare tutto senza incrinature.",
+       "Winston lo sa: il potere non è controllare le azioni, è controllare la realtà nella mente delle persone."],
+     quote:"«La libertà è la libertà di dire che due più due fa quattro.»",
+     takeaway:"Allena il pensiero critico: verificare i fatti è l'antidoto a chi vuole pensare al posto tuo."}
+  ]
+},
+{
+  id:"arte-guerra", title:"L'arte della guerra", author:"Sun Tzu", emoji:"⚔️", hue:25,
+  lessons:[
+    {title:"Vincere senza combattere",
+     hook:"Il più grande manuale di strategia mai scritto dice una cosa sorprendente: la vittoria migliore è quella senza battaglia.",
+     points:[
+       "Sun Tzu: 'L'arte suprema della guerra è sottomettere il nemico senza combattere.' Lo scontro diretto è l'ultima risorsa.",
+       "Prima vengono la diplomazia, poi la strategia, poi l'inganno. Solo alla fine l'assedio — la scelta peggiore.",
+       "Nella vita quotidiana: il negoziato migliore è quello in cui l'altro non si sente sconfitto. Evita le battaglie inutili."],
+     quote:"«L'arte suprema della guerra è sottomettere il nemico senza combattere.»",
+     takeaway:"La prossima volta che stai per litigare, chiediti: posso vincere senza combattere?"},
+    {title:"Conosci il nemico e te stesso",
+     hook:"«Conosci il nemico e conosci te stesso: in cento battaglie, cento vittorie.» Ma quanto conosci davvero te stesso?",
+     points:[
+       "Sun Tzu mette la conoscenza al primo posto: informazioni su forze, terreno, morale — e sui tuoi limiti.",
+       "Se conosci solo te stesso, vinci una volta su due. Se non conosci né te né l'altro, perdi sempre.",
+       "Prima di ogni sfida — un esame, un colloquio, una trattativa — studia il contesto e i tuoi punti deboli."],
+     quote:"«Conosci il nemico e conosci te stesso e in cento battaglie non correrai alcun rischio.»",
+     takeaway:"Preparati: la vittoria si costruisce prima dello scontro, con le informazioni."},
+    {title:"La velocità è l'essenza",
+     hook:"Una guerra lunga impoverisce lo Stato. Per Sun Tzu la lezione è chiara: se devi agire, agisci in fretta.",
+     points:[
+       "'La velocità è l'essenza della guerra': ogni giorno in più consuma risorse, morale, denaro.",
+       "Il piano perfetto eseguito domani vale meno di un piano buono eseguito oggi. L'attesa perfetta è una trappola.",
+       "Vale per i progetti: l'inerzia uccide più idee dei concorrenti. Meglio un passo rapido che un salto immaginato."],
+     quote:"«La velocità è l'essenza della guerra.»",
+     takeaway:"Scegli una cosa che rimandi da settimane. Oggi fai il primo passo, anche piccolo."}
+  ]
+},
+{
+  id:"pensieri-lenti-veloci", title:"Pensieri lenti e veloci", author:"Daniel Kahneman", emoji:"🧠", hue:265,
+  lessons:[
+    {title:"I due sistemi",
+     hook:"Quanto fa 2+2? Lo sai subito. Quanto fa 17×24? Ti fermi. Nel tuo cervello lavorano due sistemi molto diversi.",
+     points:[
+       "Il Sistema 1 è veloce, automatico, intuitivo: riconosce volti, completa frasi, guida in strade vuote.",
+       "Il Sistema 2 è lento, deliberato, faticoso: fa calcoli, controlla, pianifica. Ed è pigro: interviene solo se costretto.",
+       "La maggior parte delle decisioni quotidiane le prende il Sistema 1. Il problema: a volte sbaglia in modo prevedibile."],
+     quote:"«Il Sistema 1 corre, il Sistema 2 cammina — e spesso sonnecchia.»",
+     takeaway:"Per le decisioni importanti, forza il Sistema 2: fermati, scrivi, calcola."},
+    {title:"L'ancoraggio",
+     hook:"Vedi un prezzo di 1.000 euro barrato e sotto 300: affare! Ma quel 1.000 esisteva davvero? Il tuo cervello è già stato ancorato.",
+     points:[
+       "L'ancoraggio: il primo numero che vedi condiziona ogni stima successiva, anche se è assurdo o irrilevante.",
+       "Nelle trattative, chi fa la prima offerta ancora il gioco. Nei saldi, il prezzo 'originale' è l'ancora.",
+       "Kahneman lo dimostra: persino esperti professionisti vengono influenzati da numeri tirati a caso."],
+     quote:"«Le persone sono influenzate da numeri irrilevanti quando fanno stime.»",
+     takeaway:"Prima di valutare un'offerta, decidi TU il valore. Non lasciare che l'ancora decida per te."},
+    {title:"Perdere fa più male",
+     hook:"Perdere 50 euro fa più male di quanto gioia dia trovarne 50. Non è pessimismo: è come siamo cablati.",
+     points:[
+       "L'avversione alla perdita: le perdite pesano psicologicamente circa il doppio dei guadagni equivalenti.",
+       "Per questo restiamo in investimenti in perdita, non cambiamo lavoro, teniamo oggetti inutili: temiamo la perdita più di quanto desideriamo il guadagno.",
+       "Kahneman e Tversky l'hanno misurata: è uno dei bias più solidi della psicologia delle decisioni."],
+     quote:"«Le perdite appaiono più grandi dei guadagni.»",
+     takeaway:"Quando decidi, separa i fatti dalla paura di perdere. Chiediti: 'lo sceglierei anche se non l'avessi mai avuto?'"}
+  ]
+}
+];
+
+/* ---------- STORE (localStorage con fallback in memoria) ---------- */
+const Store = {
+  data:null,
+  load(){
+    const def = {likes:{},saves:{},done:{},generated:[],key:"",settings:{audio:true,rate:1,voice:""},seenIntro:false,lastLesson:"",days:[]};
+    try{
+      const raw = localStorage.getItem("sfoglia_v1");
+      const parsed = raw ? JSON.parse(raw) : {};
+      this.data = Object.assign({}, def, parsed);
+      this.data.settings = Object.assign({}, def.settings, parsed.settings||{});
+    }catch(e){ this.data = def; }
+    return this.data;
+  },
+  save(){ try{ localStorage.setItem("sfoglia_v1", JSON.stringify(this.data)); }catch(e){} }
+};
+const S = Store.load();
+const today = () => new Date().toISOString().slice(0,10);
+if(!S.days.includes(today())){ S.days.push(today()); Store.save(); }
+
+/* ---------- UTILS ---------- */
+const $ = s => document.querySelector(s);
+const $$ = s => [...document.querySelectorAll(s)];
+const esc = s => String(s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const norm = s => String(s).toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/[^a-z0-9]+/g," ").trim();
+const hash = s => { let h=5381; for(let i=0;i<s.length;i++) h=((h<<5)+h+s.charCodeAt(i))|0; return Math.abs(h); };
+const fmt = n => n>=1000 ? (n/1000).toFixed(1).replace(".",",")+"K" : String(n);
+const words = t => String(t).trim().split(/\s+/).filter(Boolean).length;
+const estDur = t => Math.min(16, Math.max(3.5, words(t)/2.5 + .6));
+const clamp = (v,a,b) => Math.min(b, Math.max(a,v));
+function toast(msg, ms=2600){
+  const t=$("#toast"); t.textContent=msg; t.classList.add("show");
+  clearTimeout(toast._t); toast._t=setTimeout(()=>t.classList.remove("show"), ms);
+}
+function coverHTML(b, mini=false){
+  const h=b.hue??210;
+  return `<div class="cover" style="background:
+    radial-gradient(120% 90% at 20% 0%, hsl(${h} 80% 52% / .95), transparent 60%),
+    radial-gradient(120% 100% at 100% 100%, hsl(${(h+55)%360} 75% 40% / .9), transparent 55%),
+    linear-gradient(160deg, hsl(${h} 45% 18%), hsl(${(h+30)%360} 50% 10%))">
+    <div class="emo">${esc(b.emoji||"📖")}</div>
+    <div><div class="ct">${esc(b.title)}</div><div class="ca">${esc(b.author||"Autore sconosciuto")}</div></div>
+    ${b.generated?'<div class="gen">IA ✨</div>':""}
+  </div>`;
+}
+function handleOf(b){ return "@"+norm(b.title).replace(/\s+/g,"").slice(0,22); }
+function allBooks(){ return [...S.generated].reverse().concat(BOOKS); }
+function allLessons(){
+  const out=[];
+  for(const b of allBooks()) b.lessons.forEach((l,i)=>out.push({book:b,lesson:l,n:i+1,id:b.id+"::"+i}));
+  return out;
+}
+function lessonDuration(l){ return Math.round(l.hook.split(/\s+/).length/2.5+ l.points.reduce((a,p)=>a+p.split(/\s+/).length,0)/2.5 + l.quote.split(/\s+/).length/2.5 + l.takeaway.split(/\s+/).length/2.5 + 3); }
+
+/* ---------- TTS ---------- */
+const TTS = {
+  ok: typeof speechSynthesis !== "undefined",
+  voices:[], voice:null,
+  init(){
+    if(!this.ok) return;
+    const load=()=>{
+      this.voices = speechSynthesis.getVoices().filter(v=>v.lang && v.lang.toLowerCase().startsWith("it"));
+      if(!this.voices.length) this.voices = speechSynthesis.getVoices();
+      this.pick(); renderVoiceSelect();
+    };
+    load(); speechSynthesis.onvoiceschanged = load;
+  },
+  pick(){
+    const all = speechSynthesis.getVoices();
+    this.voice = all.find(v=>v.voiceURI===S.settings.voice)
+      || all.find(v=>/it[-_]IT/i.test(v.lang))
+      || all.find(v=>/^it/i.test(v.lang))
+      || all[0] || null;
+  },
+  speak(text, onend, onerror){
+    if(!this.ok) return null;
+    speechSynthesis.cancel();
+    const u = new SpeechSynthesisUtterance(text);
+    if(this.voice) u.voice=this.voice;
+    u.lang = this.voice ? this.voice.lang : "it-IT";
+    u.rate = S.settings.rate||1; u.pitch=1;
+    u.onend = onend;
+    u.onerror = e => { if(onerror) onerror(e); else if(onend) onend(); };
+    try{ speechSynthesis.speak(u); }catch(e){ if(onerror) onerror(e); return null; }
+    return u;
+  },
+  stop(){ if(this.ok) speechSynthesis.cancel(); }
+};
+
+/* ---------- BACKGROUND CANVAS ---------- */
+const BG = {
+  cv:$("#bg"), ctx:null, hue:345, target:345, parts:[],
+  init(){
+    this.ctx=this.cv.getContext("2d");
+    this.resize();
+    this.parts = Array.from({length:26},()=>({
+      x:Math.random(), y:Math.random(), r:.8+Math.random()*2.2,
+      s:.00006+Math.random()*.00018, o:.15+Math.random()*.4, ph:Math.random()*6.28
+    }));
+    addEventListener("resize",()=>this.resize());
+  },
+  resize(){
+    const r=this.cv.getBoundingClientRect();
+    this.cv.width=Math.max(1,r.width*devicePixelRatio);
+    this.cv.height=Math.max(1,r.height*devicePixelRatio);
+  },
+  setHue(h){ this.target=h; },
+  draw(t){
+    const c=this.ctx, w=this.cv.width, h=this.cv.height;
+    this.hue += (this.target-this.hue)*.03;
+    c.clearRect(0,0,w,h);
+    c.fillStyle="#0a0a10"; c.fillRect(0,0,w,h);
+    const blob=(x,y,r,hh,a)=>{
+      const g=c.createRadialGradient(x,y,0,x,y,r);
+      g.addColorStop(0,`hsla(${hh},80%,50%,${a})`); g.addColorStop(1,"transparent");
+      c.fillStyle=g; c.fillRect(0,0,w,h);
+    };
+    blob(w*(.25+.12*Math.sin(t*.00013)), h*(.3+.1*Math.cos(t*.0001)), w*.75, this.hue, .34);
+    blob(w*(.8+.1*Math.cos(t*.00011)), h*(.75+.08*Math.sin(t*.00015)), w*.7, (this.hue+55)%360, .26);
+    blob(w*.5, h*(.1+.06*Math.sin(t*.00009)), w*.5, (this.hue+300)%360, .12);
+    for(const p of this.parts){
+      p.y -= p.s*16; if(p.y<-.05){p.y=1.05;p.x=Math.random();}
+      const x=(p.x+.02*Math.sin(t*.0004+p.ph))*w, y=p.y*h;
+      c.beginPath(); c.arc(x,y,p.r*devicePixelRatio,0,6.283);
+      c.fillStyle=`hsla(${this.hue},70%,80%,${p.o})`; c.fill();
+    }
+  }
+};
+
+/* ---------- FEED + PLAYER ---------- */
+let LESSONS=[];
+const P = {idx:-1, scene:0, playing:false, paused:false, t0:0, est:0, timer:null, token:0};
+let audioUnlocked=false, feedVisible=true, feedIO=null, audioWarned=false;
+
+function scenesOf(l){
+  return [
+    {label:"GANCIO", text:l.hook, kind:"hook"},
+    ...l.points.map((p,i)=>({label:"PUNTO "+(i+1), text:p, kind:"point"})),
+    {label:"IDEA CHIAVE", text:l.quote, kind:"quote"},
+    {label:"DA PORTARE A CASA", text:l.takeaway, kind:"take"}
+  ];
+}
+function sceneFont(text){
+  const n=text.length;
+  return n<70?34 : n<130?29 : n<200?25 : 22;
+}
+function buildFeed(startId){
+  LESSONS=allLessons();
+  const feed=$("#feed"); feed.innerHTML="";
+  feed.onclick=onFeedClick; feed.ondblclick=e=>e.preventDefault();
+  if(feedIO) feedIO.disconnect();
+  stopPlayback(); P.idx=-1; P.scene=0;
+  LESSONS.forEach((it,idx)=>{
+    const b=it.book, l=it.lesson, id=it.id;
+    const likes=S.likes[id]?1:0, saves=S.saves[id]?1:0;
+    const card=document.createElement("section");
+    card.className="card"+(S.done[id]?" completed":"");
+    card.dataset.idx=idx;
+    const slideList=scenesOf(l);
+    card.innerHTML=`
+      <div class="progress">${slideList.map((_,i)=>`<div class="seg"><i style="width:${i===0?"0%":"0%"}"></i></div>`).join("")}</div>
+      <div class="done-badge">✓ Completata</div>
+      <div class="slides-viewport"><div class="slides-track">
+        ${slideList.map((sc,i)=>`<article class="slide" data-slide="${i}"><div class="slide-art" style="--slide-hue:${b.hue??210}">
+          <div class="slide-top"><span>${esc(sc.label)}</span><span class="book-emoji">${esc(b.emoji||"📖")}</span></div>
+          <div class="slide-copy"><div class="chip">${esc(sc.label)}</div><div class="scene-text${sc.kind==="quote"?" quote":""}"></div></div>
+          <div class="slide-bottom"><span>SCORRI PER CONTINUARE</span><i class="line"></i><span>${String(i+1).padStart(2,"0")}</span></div>
+        </div></article>`).join("")}
+      </div></div>
+      <div class="pause-ic"><span>Ⅱ</span></div>
+      <div class="slide-nav"><button data-act="prev-slide" aria-label="Slide precedente">‹</button><div class="dots">${slideList.map((_,i)=>`<i class="${i===0?"active":""}"></i>`).join("")}</div><span class="slide-count">1/${slideList.length}</span><button data-act="next-slide" aria-label="Slide successiva">›</button></div>
+      <div class="rail">
+        <div class="disc">${esc(b.emoji||"📖")}</div>
+        <button data-act="pause"><span class="ic">Ⅱ</span><span class="n">Voce</span></button>
+        <button data-act="like" class="${S.likes[id]?"on":""}"><span class="ic">${S.likes[id]?"❤️":"🤍"}</span><span class="n">${likes}</span></button>
+        <button data-act="save" class="${S.saves[id]?"on":""}"><span class="ic">🔖</span><span class="n">${saves}</span></button>
+        <button data-act="share"><span class="ic">↗️</span><span class="n">Share</span></button>
+      </div>
+      <div class="meta">
+        <div class="handle">${handleOf(b)}</div>
+        <div class="ltitle">${esc(l.title)}</div>
+        <div class="sub">${esc(b.title)}${b.chapter?" · "+esc(b.chapter):""} · Lezione ${it.n}/${b.lessons.length} · ${slideList.length} slide${b.demo?'<span class="demo-tag">DEMO</span>':""}</div>
+      </div>`;
+    feed.appendChild(card);
+  });
+  feedIO=new IntersectionObserver(es=>{
+    let best=null;
+    es.forEach(e=>{ if(e.isIntersecting && e.intersectionRatio>=.6) best=e.target; });
+    if(best) setActive(+best.dataset.idx);
+  },{root:feed,threshold:[.6]});
+  $$(".card").forEach(c=>{
+    feedIO.observe(c);
+    const track=c.querySelector(".slides-track"); let settle=null;
+    track.addEventListener("scroll",()=>{
+      clearTimeout(settle);
+      settle=setTimeout(()=>{
+        const page=clamp(Math.round(track.scrollLeft/Math.max(1,track.clientWidth)),0,scenesOf(LESSONS[+c.dataset.idx].lesson).length-1);
+        if(+c.dataset.idx===P.idx && page!==P.scene) setSlide(P.idx,page,true);
+      },100);
+    },{passive:true});
+  });
+  let startIdx=LESSONS.findIndex(x=>x.id===(startId||S.lastLesson));
+  if(startIdx<0) startIdx=0;
+  requestAnimationFrame(()=>{
+    feed.scrollTop=startIdx*feed.clientHeight;
+    setActive(startIdx);
+  });
+}
+function cardAt(i){ return $(`.card[data-idx="${i}"]`); }
+function renderScene(card, lesson, sIdx){
+  const scenes=scenesOf(lesson);
+  card.querySelectorAll(".slide").forEach((slide,i)=>{
+    const sc=scenes[i], txt=slide.querySelector(".scene-text");
+    slide.classList.toggle("active",i===sIdx);
+    if(i===sIdx || txt.dataset.ready!=="1"){
+      txt.className="scene-text"+(sc.kind==="quote"?" quote":"");
+      txt.style.fontSize=sceneFont(sc.text)+"px";
+      txt.innerHTML=sc.text.split(/\s+/).map((w,j)=>`<span class="w" style="animation-delay:${Math.min(j*38,760)}ms">${esc(w)}</span>`).join(" ");
+      txt.dataset.ready="1";
+    }
+  });
+  card.querySelectorAll(".seg i").forEach((el,i)=>{ el.style.width=i<=sIdx?"100%":"0%"; });
+  card.querySelectorAll(".slide-nav .dots i").forEach((el,i)=>el.classList.toggle("active",i===sIdx));
+  const count=card.querySelector(".slide-count"); if(count) count.textContent=`${sIdx+1}/${scenes.length}`;
+  const prev=card.querySelector('[data-act="prev-slide"]'), next=card.querySelector('[data-act="next-slide"]');
+  if(prev) prev.disabled=sIdx===0; if(next) next.disabled=sIdx===scenes.length-1;
+  updateVoiceControl(card);
+}
+function updateVoiceControl(card){
+  if(!card) return;
+  const btn=card.querySelector('[data-act="pause"]'); if(!btn) return;
+  const icon=btn.querySelector(".ic");
+  icon.textContent=P.paused?"▶":P.playing?"Ⅱ":"▶";
+  btn.querySelector(".n").textContent=P.paused?"Riprendi":P.playing?"Pausa":"Voce";
+}
+function stopPlayback(){
+  P.token++; clearTimeout(P.timer); TTS.stop();
+  P.playing=false; P.paused=false;
+  const c=cardAt(P.idx); if(c){ c.classList.remove("paused"); updateVoiceControl(c); }
+}
+function setActive(idx){
+  if(idx<0 || idx>=LESSONS.length || idx===P.idx) return;
+  stopPlayback();
+  P.idx=idx; P.scene=0;
+  const it=LESSONS[idx]; if(!it) return;
+  S.lastLesson=it.id; Store.save();
+  BG.setHue(it.book.hue??210);
+  const card=cardAt(idx); if(!card) return;
+  card.querySelector(".slides-track").scrollLeft=0;
+  renderScene(card,it.lesson,0);
+  if(feedVisible && audioUnlocked && S.settings.audio) playScene();
+}
+function setSlide(idx,slideNo,fromSwipe=false){
+  const it=LESSONS[idx], card=cardAt(idx); if(!it||!card) return;
+  const max=scenesOf(it.lesson).length-1;
+  slideNo=clamp(slideNo,0,max);
+  if(idx!==P.idx){setActive(idx);}
+  if(slideNo===P.scene && P.idx===idx) return;
+  stopPlayback(); P.scene=slideNo;
+  renderScene(card,it.lesson,slideNo);
+  if(!fromSwipe){
+    const track=card.querySelector(".slides-track");
+    track.scrollTo({left:slideNo*track.clientWidth,behavior:"smooth"});
+  }
+  if(feedVisible && audioUnlocked && S.settings.audio && TTS.ok) playScene();
+  else if(slideNo===max) completeLesson();
+}
+function goSlide(delta){setSlide(P.idx,P.scene+delta,false);}
+function playScene(){
+  const it=LESSONS[P.idx]; if(!it||!S.settings.audio||!TTS.ok) return;
+  const card=cardAt(P.idx); if(!card) return;
+  const sc=scenesOf(it.lesson)[P.scene], tok=++P.token;
+  P.playing=true; P.paused=false; P.t0=performance.now();
+  card.classList.remove("paused"); updateVoiceControl(card);
+  const finish=()=>{
+    if(tok!==P.token) return;
+    P.playing=false; P.paused=false; card.classList.remove("paused"); updateVoiceControl(card);
+    if(P.scene===scenesOf(it.lesson).length-1) completeLesson();
+  };
+  const fallback=()=>{
+    if(tok!==P.token) return;
+    if(!audioWarned){audioWarned=true;toast("La voce non è disponibile in questo browser");}
+    finish();
+  };
+  TTS.speak(sc.text,finish,fallback);
+}
+function completeLesson(){
+  const it=LESSONS[P.idx]; if(!it||S.done[it.id]) return;
+  S.done[it.id]=Date.now(); Store.save();
+  const card=cardAt(P.idx); if(card) card.classList.add("completed");
+  P.playing=false; P.paused=false; updateVoiceControl(card);
+  renderStats();
+  toast("Micro-lezione completata ✓ Scorri in alto per continuare");
+}
+function suspendSpeech(){
+  const card=cardAt(P.idx);
+  if(P.playing && !P.paused && TTS.ok){
+    speechSynthesis.pause(); P.paused=true;
+    if(card){card.classList.add("paused");updateVoiceControl(card);}
+  }
+}
+function resumeSpeech(){
+  const card=cardAt(P.idx);
+  if(P.paused){
+    if(TTS.ok) speechSynthesis.resume();
+    P.paused=false;
+    if(card){card.classList.remove("paused");updateVoiceControl(card);}
+  }
+}
+function togglePause(){
+  const card=cardAt(P.idx); if(!card) return;
+  if(P.paused){resumeSpeech();}
+  else if(P.playing && TTS.ok){suspendSpeech();}
+  else{renderScene(card,LESSONS[P.idx].lesson,P.scene);playScene();}
+}
+function likeLesson(idx, on){
+  const it=LESSONS[idx]; if(!it) return;
+  const id=it.id;
+  S.likes[id]=on; Store.save();
+  const card=cardAt(idx);
+  const btn=card.querySelector('[data-act="like"]');
+  btn.classList.toggle("on",on);
+  btn.querySelector(".ic").textContent=on?"❤️":"🤍";
+  btn.querySelector(".n").textContent=on?"1":"0";
+}
+function saveLesson(idx,on){
+  const it=LESSONS[idx]; if(!it) return;
+  const id=it.id;
+  S.saves[id]=on; Store.save();
+  const card=cardAt(idx);
+  const btn=card.querySelector('[data-act="save"]');
+  btn.classList.toggle("on",on);
+  btn.querySelector(".ic").textContent="🔖";
+  btn.querySelector(".n").textContent=on?"1":"0";
+  toast(on?"Lezione salvata 🔖":"Rimossa dai salvati");
+  renderSaved();
+}
+async function shareLesson(idx){
+  const it=LESSONS[idx]; if(!it) return;
+  const text=`«${it.lesson.title}» — micro-lezione da "${it.book.title}". Su Sfoglia 📚`;
+  try{
+    if(navigator.share){ await navigator.share({title:"Sfoglia",text}); return; }
+    throw 0;
+  }catch(e){
+    try{ await navigator.clipboard.writeText(text); toast("Copiato negli appunti 📋"); }
+    catch(e2){ toast(text,4000); }
+  }
+}
+let lastTap=0;
+function onFeedClick(e){
+  const btn=e.target.closest("button[data-act]");
+  const card=e.target.closest(".card"); if(!card) return;
+  const idx=+card.dataset.idx;
+  if(btn){
+    const act=btn.dataset.act;
+    if(act==="like") likeLesson(idx,!S.likes[LESSONS[idx].id]);
+    if(act==="save") saveLesson(idx,!S.saves[LESSONS[idx].id]);
+    if(act==="share") shareLesson(idx);
+    if(act==="pause" && idx===P.idx) togglePause();
+    if(act==="prev-slide" && idx===P.idx) goSlide(-1);
+    if(act==="next-slide" && idx===P.idx) goSlide(1);
+    return;
+  }
+  audioUnlocked=true;
+  const now=Date.now();
+  if(now-lastTap<280){
+    lastTap=0;
+    if(!S.likes[LESSONS[idx].id]){
+      likeLesson(idx,true);
+      const r=card.getBoundingClientRect();
+      const h=document.createElement("div"); h.className="heart-burst"; h.textContent="❤️";
+      h.style.left=(e.clientX-r.left)+"px"; h.style.top=(e.clientY-r.top)+"px";
+      card.appendChild(h); setTimeout(()=>h.remove(),850);
+    }
+    return;
+  }
+  lastTap=now;
+}
+
+/* ---------- VIEWS / TABS ---------- */
+function switchView(name){
+  $$(".view").forEach(v=>v.classList.toggle("active", v.id==="view-"+name));
+  $$("#tabbar button[data-view]").forEach(b=>b.classList.toggle("active", b.dataset.view===name));
+  feedVisible = name==="feed";
+  if(!feedVisible) suspendSpeech();
+  else if(P.paused) resumeSpeech();
+  if(name==="profilo") renderProfile();
+  if(name==="salvati") renderSaved();
+  if(name==="scopri") renderBooks();
+}
+
+/* ---------- SCOPRI ---------- */
+function renderBooks(filter=""){
+  const q=norm(filter);
+  const grid=$("#bookGrid"); grid.innerHTML="";
+  const cta=document.createElement("div");
+  cta.className="cta-card";
+  cta.innerHTML="<b>✨ Non trovi il libro? Generalo</b><span>Scrivi un titolo e l'IA crea le micro-lezioni</span>";
+  cta.onclick=openGen;
+  grid.appendChild(cta);
+  allBooks().filter(b=>!q||norm(b.title+" "+b.author).includes(q)).forEach(b=>{
+    const el=document.createElement("button"); el.className="book";
+    el.innerHTML=coverHTML(b)+`<div class="binfo">${b.lessons.length} micro-lezioni · ~${Math.round(b.lessons.reduce((a,l)=>a+lessonDuration(l),0)/60)} min</div>`;
+    el.onclick=()=>openBook(b.id);
+    grid.appendChild(el);
+  });
+}
+function openBook(id){
+  const b=allBooks().find(x=>x.id===id); if(!b) return;
+  const sheet=$("#bookSheet");
+  sheet.innerHTML=`
+    <button class="x" data-close>✕</button>
+    <div class="book-head">
+      <div class="mini">${coverHTML(b,true)}</div>
+      <div class="bh"><h2>${esc(b.title)}</h2><p>${esc(b.author||"")}</p>
+      ${b.chapter?`<p style="margin-top:5px;color:var(--acc2)">Focus: ${esc(b.chapter)}</p>`:""}
+      <p style="margin-top:6px">${b.lessons.length} micro-lezioni${b.demo?" · modalità demo":""}</p></div>
+    </div>
+    ${b.lessons.map((l,i)=>{
+      const lid=b.id+"::"+i;
+      return `<button class="lrow" data-lid="${lid}">
+        <div class="n">${i+1}</div>
+        <div class="t"><b>${esc(l.title)}</b><span>~${lessonDuration(l)} secondi</span></div>
+        <div class="st">${S.done[lid]?"✅":"▶️"}</div>
+      </button>`;
+    }).join("")}
+    <button class="btn block" id="playBook" style="margin-top:6px">▶ Inizia dal principio</button>
+    ${b.generated?`<button class="btn ghost block" id="delBook" style="margin-top:10px">Elimina libro generato</button>`:""}
+  `;
+  sheet.querySelectorAll("[data-lid]").forEach(el=>{
+    el.onclick=()=>{ closeModal("bookModal"); gotoLesson(el.dataset.lid); };
+  });
+  $("#playBook").onclick=()=>{ closeModal("bookModal"); gotoLesson(b.id+"::0"); };
+  const del=$("#delBook");
+  if(del) del.onclick=()=>{
+    if(confirm("Eliminare questo libro generato?")){
+      S.generated=S.generated.filter(x=>x.id!==b.id); Store.save();
+      closeModal("bookModal"); buildFeed(); renderBooks(); renderProfile();
+      toast("Libro eliminato");
+    }
+  };
+  sheet.querySelector("[data-close]").onclick=()=>closeModal("bookModal");
+  openModal("bookModal");
+}
+function gotoLesson(id){
+  buildFeed(id); switchView("feed");
+}
+
+/* ---------- SALVATI ---------- */
+function renderSaved(){
+  const box=$("#savedList"); box.innerHTML="";
+  const saved=allLessons().filter(x=>S.saves[x.id]);
+  if(!saved.length){
+    box.innerHTML='<div class="empty"><span class="big">🔖</span>Nessuna lezione salvata.<br>Tocca l\'icona segnalibro nel feed per salvarne una.</div>';
+    return;
+  }
+  saved.forEach(it=>{
+    const el=document.createElement("button"); el.className="lrow";
+    el.innerHTML=`<div class="n">${it.book.emoji||"📖"}</div>
+      <div class="t"><b>${esc(it.lesson.title)}</b><span>${esc(it.book.title)} · ~${lessonDuration(it.lesson)}s</span></div>
+      <div class="st">▶️</div>`;
+    el.onclick=()=>gotoLesson(it.id);
+    box.appendChild(el);
+  });
+}
+
+/* ---------- PROFILO ---------- */
+function streak(){
+  const days=[...new Set(S.days)].sort();
+  let n=0, d=new Date();
+  for(;;){
+    const iso=d.toISOString().slice(0,10);
+    if(days.includes(iso)){ n++; d.setDate(d.getDate()-1); }
+    else break;
+  }
+  return n;
+}
+function renderStats(){
+  const done=Object.keys(S.done).length;
+  const books=new Set(Object.keys(S.done).map(k=>k.split("::")[0])).size;
+  let secs=0;
+  for(const it of allLessons()) if(S.done[it.id]) secs+=lessonDuration(it.lesson);
+  $("#stDone").textContent=done;
+  $("#stBooks").textContent=books;
+  $("#stMin").textContent=Math.max(0,Math.round(secs/60));
+  $("#stStreak").textContent=streak();
+}
+function renderVoiceSelect(){
+  const sel=$("#setVoice"); if(!sel) return;
+  const all=TTS.ok?speechSynthesis.getVoices():[];
+  const its=all.filter(v=>/^it/i.test(v.lang));
+  const list=its.length?its:all;
+  sel.innerHTML='<option value="">Automatica (italiano)</option>'+
+    list.map(v=>`<option value="${esc(v.voiceURI)}">${esc(v.name)} (${esc(v.lang)})</option>`).join("");
+  sel.value=S.settings.voice||"";
+}
+function renderProfile(){
+  renderStats();
+  $("#keyInput").value=S.key||"";
+  $("#keyStatus").innerHTML=S.key
+    ? '✅ Chiave salvata: generazione IA <b>reale</b> attiva.'
+    : 'ℹ️ Nessuna chiave: modalità demo. La libreria demo funziona comunque.';
+  $("#setAudio").checked=!!S.settings.audio;
+  $("#setRate").value=S.settings.rate||1;
+  $("#rateVal").textContent=(S.settings.rate||1).toFixed(2)+"×";
+  renderVoiceSelect();
+  const gl=$("#genList"); gl.innerHTML="";
+  if(!S.generated.length){
+    gl.innerHTML='<div class="empty" style="padding:24px"><span class="big" style="font-size:30px">✨</span>Nessun libro generato. Premi <b>Crea</b> e prova!</div>';
+  }else{
+    S.generated.slice().reverse().forEach(b=>{
+      const el=document.createElement("button"); el.className="lrow";
+      el.innerHTML=`<div class="n">${esc(b.emoji||"📖")}</div><div class="t"><b>${esc(b.title)}</b><span>${b.chapter?esc(b.chapter)+" · ":""}${b.lessons.length} lezioni · ${b.demo?"demo":"IA"}</span></div><div class="st">▶️</div>`;
+      el.onclick=()=>openBook(b.id);
+      gl.appendChild(el);
+    });
+  }
+}
+
+/* ---------- MODALS ---------- */
+function openModal(id){
+  $("#"+id).classList.add("open");
+  if(feedVisible) suspendSpeech();
+}
+function closeModal(id){
+  $("#"+id).classList.remove("open");
+  if(feedVisible) resumeSpeech();
+}
+$$(".modal .shade").forEach(s=>s.onclick=()=>closeModal(s.closest(".modal").id));
+$$(".modal [data-close]").forEach(b=>b.onclick=()=>closeModal(b.closest(".modal").id));
+
+/* ---------- GENERATORE ---------- */
+function openGen(){
+  $("#keyChip").innerHTML=S.key
+    ?'<span class="key-chip real">● IA reale attiva</span>'
+    :'<span class="key-chip demo">● Modalità demo — aggiungi la chiave gratuita in Profilo</span>';
+  $("#genStatus").className="gen-status"; $("#genStatus").innerHTML="";
+  $("#genBtn").disabled=false;
+  openModal("genModal");
+  setTimeout(()=>$("#genTitle").focus(),150);
+}
+function findDemoBook(title){
+  const q=norm(title);
+  const aliases={
+    "piccolo principe":"piccolo-principe","piccolo prince":"piccolo-principe",
+    "sapiens":"sapiens","atomic habits":"atomic-habits","piccole abitudini":"atomic-habits",
+    "1984":"1984","arte della guerra":"arte-guerra","pensieri lenti":"pensieri-lenti-veloci","kahneman":"pensieri-lenti-veloci"
+  };
+  for(const k in aliases) if(q.includes(k)) return BOOKS.find(b=>b.id===aliases[k]);
+  return BOOKS.find(b=>norm(b.title).includes(q)||q.includes(norm(b.title)));
+}
+function templateBook(title,author,chapter=""){
+  const t=title.trim();
+  return {
+    id:"gen-"+Date.now(), title:t, author:author.trim()||"Autore da verificare", chapter:chapter.trim(), emoji:"📖", hue:hash(t)%360,
+    generated:true, demo:true,
+    lessons:[
+      {title:"Parti dalla domanda giusta",
+       hook:`Stai per leggere «${t}». Prima di aprirlo, fermati: cosa speri di trovare in queste pagine?`,
+       points:[
+         "Un obiettivo di lettura chiaro trasforma un libro da dovere a strumento: vuoi capire un'idea, risolvere un problema, emozionarti?",
+         "Sfoglia indice e quarta di copertina: sono la mappa del territorio. Individua i 2-3 capitoli più utili per te.",
+         "Cerca chi è l'autore e perché ha scritto il libro: il contesto cambia il modo in cui interpreti ogni pagina."],
+       quote:"«Un libro è un dialogo: inizi davvero a leggere quando fai la prima domanda.»",
+       takeaway:"Scrivi in una frase cosa vuoi ottenere da questo libro. Sarà la tua bussola."},
+      {title:"La mappa dei tre concetti",
+       hook:`Mentre leggi «${t}», tieni una sola missione: trovare le tre idee che lo reggono.`,
+       points:[
+         "Ogni libro ha poche idee portanti. Tutto il resto è esempio, prova, storia. Cerca quelle tre idee.",
+         "Segnale: un'idea torna più volte, apre capitoli, viene riassunta dall'autore. Quella è portante.",
+         "Annotale con parole tue: se non sai spiegarla in una frase, non l'hai capita davvero."],
+       quote:"«Leggere senza annotare è come viaggiare senza guardare dal finestrino.»",
+       takeaway:"Alla fine, devi avere tre frasi tue. Sono il vero riassunto del libro."},
+      {title:"Leggi in modo attivo",
+       hook:`«${t}» non va solo letto: va interrogato. Ecco come trasformare la lettura in apprendimento.`,
+       points:[
+         "Dopo ogni capitolo chiediti: qual è l'idea principale? Sono d'accordo? Cosa cambia per me?",
+         "Collega ogni concetto a qualcosa che già sai: il cervello ricorda ciò che aggancia a conoscenze esistenti.",
+         "Non sottolineare tutto: sottolinea solo ciò che potresti spiegare a qualcun altro domani."],
+       quote:"«Il lettore attivo non riceve il libro: lo completa.»",
+       takeaway:"Dopo il prossimo capitolo, scrivi tre righe di riassunto. Senza guardare il testo."},
+      {title:"Dal libro alla vita",
+       hook:`Hai letto «${t}». E adesso? Un libro finisce davvero solo quando cambia qualcosa in ciò che fai.`,
+       points:[
+         "Scegli una sola idea applicabile e trasformala in un'azione minuscola, da fare entro 48 ore.",
+         "Insegna ciò che hai imparato a qualcuno: spiegare è il test finale della comprensione.",
+         "Rileggi le tue note dopo una settimana: la memoria si consolida con il richiamo, non con la rilettura passiva."],
+       quote:"«Non conta quanto leggi, ma quanto di ciò che leggi diventa azione.»",
+       takeaway:"Scegli la tua azione da 48 ore. Un libro, un'azione: così il libro resta."}
+    ]
+  };
+}
+const GEN_STEPS=["Analizzo il libro…","Estraggo i concetti chiave…","Scrivo hook, punti e citazioni…","Monto le micro-lezioni verticali…"];
+function showGenSteps(){
+  const box=$("#genStatus"); box.className="gen-status show";
+  box.innerHTML=GEN_STEPS.map((s,i)=>`<div class="gen-step" data-i="${i}"><span class="dot"></span>${s}</div>`).join("");
+}
+function stepOk(i){
+  const el=$(`.gen-step[data-i="${i}"]`); if(!el) return;
+  el.classList.remove("on"); el.classList.add("ok");
+  const nx=$(`.gen-step[data-i="${i+1}"]`); if(nx) nx.classList.add("on");
+}
+const sleep=ms=>new Promise(r=>setTimeout(r,ms));
+let selectedGoogleBook=null, bookSearchTimer=null, bookSearchSeq=0, bookSearchAbort=null, lastBookResults=[];
+function renderBookResults(items,source){
+  const box=$("#bookResults"); lastBookResults=items;
+  if(!items.length){box.innerHTML='<div class="hint">Nessun risultato: puoi comunque inserire titolo e autore manualmente.</div>';return;}
+  box.innerHTML=items.map((b,i)=>`<button type="button" class="book-result" data-book-index="${i}"><b>${esc(b.title)}</b><span>${esc(b.author||"Autore non indicato")}${b.publishedDate?" · "+esc(b.publishedDate.slice(0,4)):""} · ${esc(source)}</span>${b.description?`<span class="bdesc">${esc(b.description.slice(0,170))}${b.description.length>170?"…":""}</span>`:""}</button>`).join("");
+  box.querySelectorAll("[data-book-index]").forEach(btn=>btn.onclick=()=>{
+    selectedGoogleBook=lastBookResults[Number(btn.dataset.bookIndex)];
+    $("#genTitle").value=selectedGoogleBook.title;
+    $("#genAuthor").value=selectedGoogleBook.author;
+    box.innerHTML=`<div class="book-selected">✓ ${esc(source)}: ${esc(selectedGoogleBook.title)}${selectedGoogleBook.author?" · "+esc(selectedGoogleBook.author):""}. Inserisci il capitolo qui sotto.</div>`;
+  });
+}
+async function searchOpenLibrary(query,signal){
+  const params=new URLSearchParams({q:query,limit:"6",fields:"title,author_name,first_publish_year,key,edition_count"});
+  const res=await fetch("https://openlibrary.org/search.json?"+params.toString(),{signal});
+  if(!res.ok) throw new Error("Open Library non disponibile");
+  const data=await res.json();
+  return (data.docs||[]).map(x=>({id:x.key||"",title:x.title||"Titolo non disponibile",author:(x.author_name||[]).join(", "),description:"",publishedDate:x.first_publish_year?String(x.first_publish_year):"",infoLink:x.key?"https://openlibrary.org"+x.key:"",previewLink:"",publicDomain:false,viewability:"",provider:"Open Library"}));
+}
+async function searchGoogleBooks(query){
+  const box=$("#bookResults"), seq=++bookSearchSeq;
+  if(bookSearchAbort) bookSearchAbort.abort();
+  if(query.trim().length<3){ box.innerHTML=""; return; }
+  bookSearchAbort=new AbortController();
+  box.innerHTML='<div class="hint">Cerco le edizioni…</div>';
+  try{
+    const params=new URLSearchParams({q:query.trim(),maxResults:"6",printType:"books",orderBy:"relevance",
+      fields:"totalItems,items(id,volumeInfo(title,authors,description,publishedDate,infoLink,previewLink,categories),accessInfo(publicDomain,viewability))"});
+    const res=await fetch("https://www.googleapis.com/books/v1/volumes?"+params.toString(),{signal:bookSearchAbort.signal});
+    if(!res.ok) throw new Error("Google Books non disponibile");
+    const data=await res.json(); if(seq!==bookSearchSeq) return;
+    const books=(data.items||[]).map(x=>({
+      id:x.id,title:x.volumeInfo?.title||"Titolo non disponibile",
+      author:(x.volumeInfo?.authors||[]).join(", "),
+      description:String(x.volumeInfo?.description||"").slice(0,5000),
+      publishedDate:x.volumeInfo?.publishedDate||"",
+      infoLink:x.volumeInfo?.infoLink||"",previewLink:x.volumeInfo?.previewLink||"",
+      publicDomain:!!x.accessInfo?.publicDomain,viewability:x.accessInfo?.viewability||"",provider:"Google Books"
+    }));
+    if(books.length){renderBookResults(books,"Google Books");return;}
+    const fallback=await searchOpenLibrary(query.trim(),bookSearchAbort.signal);
+    if(seq===bookSearchSeq) renderBookResults(fallback,"Open Library");
+  }catch(e){
+    if(e.name==="AbortError"||seq!==bookSearchSeq) return;
+    try{
+      const fallback=await searchOpenLibrary(query.trim(),bookSearchAbort.signal);
+      if(seq===bookSearchSeq) renderBookResults(fallback,"Open Library");
+    }catch(e2){
+      if(e2.name==="AbortError"||seq!==bookSearchSeq) return;
+      box.innerHTML='<div class="hint">Cataloghi non raggiungibili. Puoi comunque inserire titolo e autore a mano.</div>';
+    }
+  }
+}
+$("#genTitle").addEventListener("input",e=>{
+  selectedGoogleBook=null;
+  clearTimeout(bookSearchTimer);
+  const q=e.target.value.trim();
+  bookSearchTimer=setTimeout(()=>searchGoogleBooks(q),450);
+});
+async function generateBook(){
+  const title=$("#genTitle").value.trim(), author=$("#genAuthor").value.trim();
+  const chapter=$("#genChapter").value.trim(), notes=$("#genNotes").value.trim();
+  const count=clamp(parseInt($("#genCount").value,10)||4,3,6);
+  if(!title){ toast("Cerca o scrivi il titolo del libro"); return; }
+  $("#genBtn").disabled=true; showGenSteps();
+  const first=$('.gen-step[data-i="0"]'); if(first) first.classList.add("on");
+  let book=null, usedAI=false;
+  try{
+    await sleep(500); stepOk(0);
+    if(S.key){
+      await sleep(400); stepOk(1);
+      book=await geminiBook(title,author,count,chapter,notes,selectedGoogleBook); usedAI=true;
+      stepOk(2); await sleep(400); stepOk(3);
+    }else{
+      await sleep(600); stepOk(1);
+      const demo=chapter?null:findDemoBook(title);
+      if(demo){
+        book=JSON.parse(JSON.stringify(demo));
+        book.id="gen-"+Date.now(); book.generated=true;
+        book.lessons=book.lessons.slice(0,count);
+      }else{
+        book=templateBook(title,author,chapter);
+      }
+      await sleep(700); stepOk(2); await sleep(500); stepOk(3);
+    }
+    book.chapter=chapter;
+    if(selectedGoogleBook) book.sourceBook={id:selectedGoogleBook.id,publishedDate:selectedGoogleBook.publishedDate,infoLink:selectedGoogleBook.infoLink,description:selectedGoogleBook.description};
+    S.generated.push(book); Store.save();
+    await sleep(450);
+    closeModal("genModal");
+    $("#genTitle").value=""; $("#genAuthor").value=""; $("#genChapter").value=""; $("#genNotes").value="";
+    $("#bookResults").innerHTML=""; selectedGoogleBook=null;
+    buildFeed(book.id+"::0"); switchView("feed");
+    toast(usedAI?"Micro-lezioni IA create ✨":(chapter?"Guida demo sul capitolo: collega Gemini per una spiegazione del contenuto":"Libro demo aggiunto ✨"),4000);
+  }catch(err){
+    console.error(err);
+    $("#genBtn").disabled=false;
+    const box=$("#genStatus");
+    box.innerHTML=`<div style="font-size:13px;line-height:1.5;color:#ff9a9a">⚠️ ${esc(err.message||"Errore di generazione")}</div>
+      <button class="btn ghost block" id="genRetry" style="margin-top:10px">Riprova</button>`;
+    $("#genRetry").onclick=generateBook;
+  }
+}
+async function geminiBook(title,author,count,chapter="",notes="",sourceBook=null){
+  const chapterScope=chapter?`\nCAPITOLO/ARGOMENTO richiesto: "${chapter}". Restringi ogni lezione a questo capitolo/argomento, non fare un riassunto generale del libro.`:"";
+  const bookDescription=sourceBook?.description?`\nDESCRIZIONE EDITORIALE (solo contesto, non è il testo del capitolo): ${sourceBook.description.slice(0,3500)}`:"";
+  const userNotes=notes?`\nAPPUNTI FORNITI DALL'UTENTE (fonte prioritaria; non aggiungere dettagli incompatibili): ${notes.slice(0,2500)}`:"";
+  const prompt=`Sei un autore di micro-lezioni originali per un'app di microlearning verticale.
+Crea ${count} micro-lezioni in ITALIANO sul libro "${title}"${author?` di ${author}`:""}.${chapterScope}${bookDescription}${userNotes}
+Se non conosci con sufficiente certezza il capitolo specifico e non ci sono appunti, non inventare eventi o tesi: restituisci {"error":"Non ho abbastanza informazioni affidabili su questo capitolo. Aggiungi appunti brevi e riprova."}.
+Rispondi SOLO con JSON valido, senza markdown, con questo schema:
+{"title":"titolo corretto del libro","author":"autore","emoji":"una sola emoji rappresentativa","hue":0,"lessons":[{"title":"titolo breve (max 6 parole)","hook":"1-2 frasi che catturano subito","points":["punto 1 (1-2 frasi)","punto 2 (1-2 frasi)","punto 3 (1-2 frasi)"],"quote":"citazione breve o parafrasi marcata come tale","takeaway":"1 frase applicabile oggi"}]}
+Regole: micro-spiegazioni e sintesi originali, non lettura integrale. Ogni lezione è autonoma e focalizzata sul capitolo indicato. Non riprodurre il libro o lunghi estratti. Non inventare citazioni letterali: usa una parafrasi originale senza virgolette come idea chiave. Se usi gli appunti, resta fedele a essi e distingui i fatti dalle interpretazioni. Se le informazioni sono insufficienti, restituisci l'errore indicato.`;
+  const models=["gemini-3.8-flash","gemini-3.6-flash","gemini-2.5-flash"];
+  let lastErr=null;
+  for(const model of models){
+    try{
+      const ctrl=new AbortController(); const to=setTimeout(()=>ctrl.abort(),35000);
+      const res=await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${encodeURIComponent(S.key)}`, {
+        method:"POST", headers:{"Content-Type":"application/json"}, signal:ctrl.signal,
+        body:JSON.stringify({
+          contents:[{parts:[{text:prompt}]}],
+          generationConfig:{temperature:.85,responseMimeType:"application/json"}
+        })
+      });
+      clearTimeout(to);
+      if(!res.ok){
+        const t=await res.text();
+        throw new Error(`API ${res.status}: ${t.slice(0,180)}`);
+      }
+      const data=await res.json();
+      let txt=data.candidates?.[0]?.content?.parts?.map(p=>p.text||"").join("")||"";
+      txt=txt.trim().replace(/^```(?:json)?/i,"").replace(/```$/,"").trim();
+      const obj=JSON.parse(txt);
+      if(obj.error) throw new Error(obj.error);
+      if(!obj.lessons||!Array.isArray(obj.lessons)||!obj.lessons.length) throw new Error("Risposta IA non valida");
+      const lessons=obj.lessons.slice(0,count).map(l=>({
+        title:String(l.title||"Lezione").slice(0,80),
+        hook:String(l.hook||"").slice(0,400),
+        points:(Array.isArray(l.points)?l.points:[]).slice(0,3).map(p=>String(p).slice(0,400)),
+        quote:String(l.quote||"").slice(0,300),
+        takeaway:String(l.takeaway||"").slice(0,300)
+      })).filter(l=>l.hook&&l.points.length===3&&l.quote&&l.takeaway);
+      if(!lessons.length) throw new Error("Risposta IA incompleta");
+      return {
+        id:"gen-"+Date.now(), title:String(obj.title||title).slice(0,120),
+        author:String(obj.author||author||"").slice(0,120),
+        emoji:String(obj.emoji||"📖").slice(0,4), hue:clamp(parseInt(obj.hue,10)||hash(title)%360,0,360),
+        generated:true, demo:false, lessons
+      };
+    }catch(e){ lastErr=e; }
+  }
+  throw new Error("Generazione IA fallita. Controlla chiave e connessione. "+(lastErr?String(lastErr.message).slice(0,140):""));
+}
+
+/* ---------- EVENTI ---------- */
+$("#createBtn").onclick=openGen;
+$("#genBtn").onclick=generateBook;
+$("#searchInput").addEventListener("input",e=>renderBooks(e.target.value));
+$("#audioBtn").onclick=()=>{
+  if(!TTS.ok){ toast("Audio non supportato da questo browser"); return; }
+  S.settings.audio=!S.settings.audio; Store.save();
+  $("#audioBtn").textContent=S.settings.audio?"🔊":"🔇";
+  if(P.idx>=0){ stopPlayback(); renderScene(cardAt(P.idx),LESSONS[P.idx].lesson,P.scene); playScene(); }
+  toast(S.settings.audio?"Audio attivo 🔊":"Audio disattivato 🔇");
+}
+$("#startBtn").onclick=()=>{
+  S.seenIntro=true; Store.save();
+  $("#intro").style.display="none";
+  audioUnlocked=true;
+  if(TTS.ok) speechSynthesis.getVoices();
+  setActive(P.idx>=0?P.idx:0);
+  if(!P.playing) playScene();
+}
+$("#saveKey").onclick=()=>{
+  S.key=$("#keyInput").value.trim(); Store.save(); renderProfile();
+  toast(S.key?"Chiave salvata ✅":"Chiave rimossa: modalità demo");
+}
+$("#setAudio").checked=!!S.settings.audio;
+$("#setRate").addEventListener("input",e=>{
+  S.settings.rate=parseFloat(e.target.value); Store.save();
+  $("#rateVal").textContent=S.settings.rate.toFixed(2)+"×";
+});
+$("#setAudio").addEventListener("change",e=>{
+  S.settings.audio=e.target.checked; Store.save();
+  $("#audioBtn").textContent=S.settings.audio?"🔊":"🔇";
+});
+$("#setVoice").addEventListener("change",e=>{
+  S.settings.voice=e.target.value; Store.save(); TTS.pick();
+});
+$("#resetBtn").onclick=()=>{
+  if(confirm("Azzerare like, salvataggi, progressi, libri generati e chiave?")){
+    try{ localStorage.removeItem("sfoglia_v1"); }catch(e){}
+    location.reload();
+  }
+};
+$$("#tabbar button[data-view]").forEach(b=>b.onclick=()=>switchView(b.dataset.view));
+addEventListener("keydown",e=>{
+  if(!feedVisible || $(".modal.open")) return;
+  if(e.key==="ArrowDown"||e.key==="PageDown"){
+    e.preventDefault(); $("#feed").scrollTo({top:(P.idx+1)*$("#feed").clientHeight,behavior:"smooth"});
+  }
+  if(e.key==="ArrowUp"||e.key==="PageUp"){
+    e.preventDefault(); $("#feed").scrollTo({top:Math.max(0,P.idx-1)*$("#feed").clientHeight,behavior:"smooth"});
+  }
+  if(e.key==="ArrowRight"){ e.preventDefault(); goSlide(1); }
+  if(e.key==="ArrowLeft"){ e.preventDefault(); goSlide(-1); }
+  if(e.key===" "){ e.preventDefault(); togglePause(); }
+});
+document.addEventListener("pointerdown",()=>{ audioUnlocked=true; }, {once:true});
+document.addEventListener("visibilitychange",()=>{
+  if(document.hidden) suspendSpeech();
+  else if(feedVisible && P.paused) resumeSpeech();
+});
+
+/* ---------- INIT ---------- */
+TTS.init(); BG.init();
+$("#audioBtn").textContent=S.settings.audio?"🔊":"🔇";
+if(S.seenIntro){ $("#intro").style.display="none"; audioUnlocked=false; }
+buildFeed();
+renderBooks(); renderSaved(); renderProfile();
+$("#setAudio").checked=!!S.settings.audio;
+if(S.seenIntro && P.idx>=0) setActive(P.idx);
+function loop(t){ BG.draw(t); requestAnimationFrame(loop); }
+requestAnimationFrame(loop);
+if("serviceWorker" in navigator && location.protocol.startsWith("http")){
+  navigator.serviceWorker.register("sw.js").catch(()=>{});
+}
+</script>
+</body>
+</html>
