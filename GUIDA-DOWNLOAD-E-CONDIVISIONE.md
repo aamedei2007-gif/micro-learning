@@ -43,6 +43,10 @@ python -m http.server 8000
 
 Poi visita `http://localhost:8000`. Questo avvia una prova locale sul computer. Aprire direttamente `index.html` dal file manager del telefono (`file://`) non è il metodo consigliato: installazione PWA, ricerca online e chiamate IA possono non funzionare correttamente.
 
-## 5. Cosa funziona senza connessione
+## 5. Mappe visuali e contenuto delle lezioni
+
+La mappa SVG non resta dietro al testo delle slide: aprila quando vuoi con il pulsante **Mappa** sul lato destro. I tre nodi sono costruiti dalle idee della micro-lezione e seguono la slide selezionata; la vista espansa riporta anche il filo del ragionamento. È un diagramma didattico creato dall'app, non una foto o un'immagine raster generata da un modello IA; funziona senza API aggiuntive e senza costi di generazione immagini.
+
+## 6. Cosa funziona senza connessione
 
 La schermata e i file già memorizzati sul dispositivo possono aprirsi offline dopo il primo caricamento. La ricerca nei cataloghi e la generazione con Gemini richiedono Internet. Il prototipo non sincronizza progressi tra dispositivi e non genera file video: mostra slide animate con voce del telefono.

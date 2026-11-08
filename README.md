@@ -1,6 +1,6 @@
 # Sfoglia — prototipo microlearning
 
-Web app mobile-first con feed verticale; dentro ogni micro-lezione le schede si sfogliano orizzontalmente come un carosello fotografico, senza avanzamento automatico. Ogni slide include un'illustrazione SVG animata; un mini quiz aiuta a fissare i concetti. La voce del browser si può mettere in pausa e riprendere sullo stesso punto. Include ricerca libri, salvataggi e progressi sul dispositivo. Le lezioni sono create dall'app; gli utenti non caricano video.
+Web app mobile-first con feed verticale; dentro ogni micro-lezione le schede si sfogliano orizzontalmente come un carosello fotografico, senza avanzamento automatico. Dal pulsante **Mappa** si apre, quando serve, una mappa SVG costruita dalle frasi della micro-lezione e aggiornata in base alla slide corrente. È un visual didattico generato localmente dal testo, senza chiamate a un generatore d'immagini esterno. Un mini quiz aiuta a fissare i concetti. La voce del browser si può mettere in pausa e riprendere sullo stesso punto. Include ricerca libri, salvataggi e progressi sul dispositivo. Le lezioni sono create dall'app; gli utenti non caricano video.
 
 ## Avvio
 
