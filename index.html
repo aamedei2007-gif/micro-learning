@@ -64,7 +64,10 @@ button{font-family:inherit;color:inherit}
 .slide-art::after{width:140px;height:140px;left:-86px;bottom:12%;box-shadow:0 0 0 18px rgba(255,255,255,.025)}
 .slide-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:auto;color:rgba(255,255,255,.82);font-size:12px;font-weight:800;letter-spacing:.12em;text-transform:uppercase}
 .slide-top .book-emoji{font-size:25px;filter:drop-shadow(0 5px 12px rgba(0,0,0,.25))}
-.slide-copy{padding:22px 0 34px}
+.slide-copy{position:relative;z-index:1;padding:22px 0 34px}
+.slide-illustration{position:absolute;z-index:0;right:12px;top:17%;width:112px;height:112px;color:rgba(255,255,255,.88);opacity:.7;filter:drop-shadow(0 12px 28px rgba(0,0,0,.25));pointer-events:none;animation:artFloat 6s ease-in-out infinite}
+.slide-illustration svg{width:100%;height:100%;overflow:visible}
+@keyframes artFloat{50%{transform:translateY(-7px) rotate(2deg)}}
 .chip{display:inline-block;font-size:10px;font-weight:900;letter-spacing:.15em;padding:6px 11px;border-radius:99px;background:rgba(255,255,255,.13);border:1px solid rgba(255,255,255,.22);color:#fff;margin-bottom:15px;text-transform:uppercase;backdrop-filter:blur(7px)}
 .scene-text{font-weight:780;line-height:1.22;letter-spacing:-.035em;text-wrap:pretty;text-shadow:0 2px 24px rgba(0,0,0,.24)}
 .scene-text .w{display:inline-block;opacity:0;transform:translateY(12px);animation:win .45s cubic-bezier(.2,.7,.2,1) forwards}
@@ -131,11 +134,6 @@ button{font-family:inherit;color:inherit}
   text-align:center;font-size:12px;color:var(--mut);animation:bob 1.6s ease-in-out infinite;
 }
 @keyframes bob{50%{transform:translateY(-5px)}}
-.heart-burst{position:absolute;z-index:5;font-size:80px;pointer-events:none;
-  animation:burst .8s ease-out forwards;transform:translate(-50%,-50%)}
-@keyframes burst{0%{opacity:0;transform:translate(-50%,-50%) scale(.3)}
-  25%{opacity:1;transform:translate(-50%,-50%) scale(1.15)}
-  100%{opacity:0;transform:translate(-50%,-70%) scale(1)}}
 .feed-top{
   position:absolute;top:0;left:0;right:0;z-index:4;
   display:flex;align-items:center;justify-content:space-between;
@@ -218,6 +216,18 @@ button{font-family:inherit;color:inherit}
 .lrow .t b{display:block;font-size:14px;margin-bottom:2px}
 .lrow .t span{font-size:12px;color:var(--mut)}
 .lrow .st{font-size:16px}
+.quiz-kicker{font-size:10px;font-weight:900;letter-spacing:.16em;color:var(--acc2);text-transform:uppercase;margin:4px 0 8px}
+.quiz-question{font-size:18px;font-weight:800;line-height:1.3;margin:0 34px 16px 0}
+.quiz-options{display:grid;gap:9px}
+.quiz-option{width:100%;text-align:left;padding:13px 14px;border:1px solid var(--line);border-radius:13px;background:var(--card);font-size:13px;line-height:1.4;cursor:pointer;transition:transform .15s,border .15s,background .15s}
+.quiz-option:active{transform:scale(.98)}
+.quiz-option.correct{border-color:#3cdc82;background:rgba(60,220,130,.13)}
+.quiz-option.incorrect{border-color:#ff6b83;background:rgba(255,94,126,.12)}
+.quiz-feedback{margin-top:14px;padding:13px;border-radius:12px;font-size:13px;line-height:1.45;background:rgba(255,255,255,.06);color:#e6e6ef}
+.quiz-feedback.good{color:#8ff0b1;background:rgba(60,220,130,.1)}
+.quiz-feedback.bad{color:#ffd0d7;background:rgba(255,94,126,.1)}
+.quiz-actions{display:flex;gap:8px;margin-top:13px}
+.quiz-actions .btn{flex:1}
 
 /* ---------- PROFILE ---------- */
 .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:16px 0 22px}
@@ -496,6 +506,12 @@ input[type=range]{width:130px;accent-color:var(--acc1)}
     <div class="sheet" id="bookSheet"></div>
   </div>
 
+  <!-- MINI QUIZ -->
+  <div class="modal" id="quizModal">
+    <div class="shade" data-close></div>
+    <div class="sheet" id="quizSheet"></div>
+  </div>
+
   <!-- INTRO -->
   <div id="intro">
     <div class="i-logo">📚</div>
@@ -505,6 +521,8 @@ input[type=range]{width:130px;accent-color:var(--acc1)}
       <div class="feat"><span>✨</span> Scrivi un titolo → l'app crea le micro-lezioni</div>
       <div class="feat"><span>↔️</span> Slide sfogliabili, senza avanzamento automatico</div>
       <div class="feat"><span>🎧</span> Voce in pausa/ripresa sullo stesso punto</div>
+      <div class="feat"><span>🎨</span> Illustrazioni animate in ogni micro-lezione</div>
+      <div class="feat"><span>🧠</span> Mini quiz per fissare le idee</div>
       <div class="feat"><span>🆓</span> Nessun costo, nessun upload di utenti</div>
     </div>
     <button class="btn" id="startBtn" style="padding:15px 34px;font-size:16px">Inizia a sfogliare →</button>
@@ -727,12 +745,13 @@ const BOOKS = [
 const Store = {
   data:null,
   load(){
-    const def = {likes:{},saves:{},done:{},generated:[],key:"",settings:{audio:true,rate:1,voice:""},seenIntro:false,lastLesson:"",days:[]};
+    const def = {saves:{},done:{},quiz:{},generated:[],key:"",settings:{audio:true,rate:1,voice:""},seenIntro:false,lastLesson:"",days:[]};
     try{
       const raw = localStorage.getItem("sfoglia_v1");
       const parsed = raw ? JSON.parse(raw) : {};
       this.data = Object.assign({}, def, parsed);
       this.data.settings = Object.assign({}, def.settings, parsed.settings||{});
+      delete this.data.likes;
     }catch(e){ this.data = def; }
     return this.data;
   },
@@ -864,6 +883,17 @@ function scenesOf(l){
     {label:"DA PORTARE A CASA", text:l.takeaway, kind:"take"}
   ];
 }
+function slideArtwork(kind){
+  const start='<svg viewBox="0 0 120 120" role="img" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">';
+  const end='</svg>';
+  const art={
+    hook:'<circle cx="60" cy="56" r="34" fill="none" stroke="currentColor" stroke-width="2" opacity=".35"/><path d="M60 28v42m0 14v2" stroke="currentColor" stroke-width="8" stroke-linecap="round"/><path d="m60 5 4 11 11 4-11 4-4 11-4-11-11-4 11-4z" fill="#ffd58f"/><path d="m94 40 3 7 7 3-7 3-3 7-3-7-7-3 7-3z" fill="#fff" opacity=".8"/>',
+    point:'<rect x="25" y="28" width="61" height="70" rx="13" fill="none" stroke="currentColor" stroke-width="3" opacity=".45" transform="rotate(-10 55 60)"/><rect x="36" y="23" width="61" height="72" rx="13" fill="rgba(255,255,255,.12)" stroke="currentColor" stroke-width="3"/><path d="M49 43h34M49 57h28M49 71h34" stroke="#ffd58f" stroke-width="4" stroke-linecap="round"/><circle cx="89" cy="88" r="17" fill="#ffb35c"/><path d="m81 88 6 6 11-13" fill="none" stroke="#271620" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>',
+    quote:'<path d="M24 34c0-8 6-14 14-14h48c8 0 14 6 14 14v34c0 8-6 14-14 14H54L34 99V82c-6-2-10-7-10-14z" fill="rgba(255,255,255,.12)" stroke="currentColor" stroke-width="3"/><path d="M48 57c0-8 5-13 12-14v9c-4 1-5 3-5 6h6v17H45V62c0-2 1-4 3-5zm31 0c0-8 5-13 12-14v9c-4 1-5 3-5 6h6v17H76V62c0-2 1-4 3-5z" fill="#ffd58f"/>',
+    take:'<circle cx="57" cy="61" r="37" fill="none" stroke="currentColor" stroke-width="3" opacity=".4"/><circle cx="57" cy="61" r="23" fill="none" stroke="currentColor" stroke-width="3" opacity=".7"/><circle cx="57" cy="61" r="8" fill="#ffb35c"/><path d="m57 61 43-39m-17 1h17v17" fill="none" stroke="#fff" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/><path d="m18 18 3 8 8 3-8 3-3 8-3-8-8-3 8-3z" fill="#ffd58f"/>'
+  };
+  return start+(art[kind]||art.point)+end;
+}
 function sceneFont(text){
   const n=text.length;
   return n<70?34 : n<130?29 : n<200?25 : 22;
@@ -876,7 +906,7 @@ function buildFeed(startId){
   stopPlayback(); P.idx=-1; P.scene=0;
   LESSONS.forEach((it,idx)=>{
     const b=it.book, l=it.lesson, id=it.id;
-    const likes=S.likes[id]?1:0, saves=S.saves[id]?1:0;
+    const saves=S.saves[id]?1:0;
     const card=document.createElement("section");
     card.className="card"+(S.done[id]?" completed":"");
     card.dataset.idx=idx;
@@ -887,6 +917,7 @@ function buildFeed(startId){
       <div class="slides-viewport"><div class="slides-track">
         ${slideList.map((sc,i)=>`<article class="slide" data-slide="${i}"><div class="slide-art" style="--slide-hue:${b.hue??210}">
           <div class="slide-top"><span>${esc(sc.label)}</span><span class="book-emoji">${esc(b.emoji||"📖")}</span></div>
+          <div class="slide-illustration">${slideArtwork(sc.kind)}</div>
           <div class="slide-copy"><div class="chip">${esc(sc.label)}</div><div class="scene-text${sc.kind==="quote"?" quote":""}"></div></div>
           <div class="slide-bottom"><span>SCORRI PER CONTINUARE</span><i class="line"></i><span>${String(i+1).padStart(2,"0")}</span></div>
         </div></article>`).join("")}
@@ -896,7 +927,7 @@ function buildFeed(startId){
       <div class="rail">
         <div class="disc">${esc(b.emoji||"📖")}</div>
         <button data-act="pause"><span class="ic">Ⅱ</span><span class="n">Voce</span></button>
-        <button data-act="like" class="${S.likes[id]?"on":""}"><span class="ic">${S.likes[id]?"❤️":"🤍"}</span><span class="n">${likes}</span></button>
+        <button data-act="quiz"><span class="ic">🧠</span><span class="n">Quiz</span></button>
         <button data-act="save" class="${S.saves[id]?"on":""}"><span class="ic">🔖</span><span class="n">${saves}</span></button>
         <button data-act="share"><span class="ic">↗️</span><span class="n">Share</span></button>
       </div>
@@ -1037,16 +1068,6 @@ function togglePause(){
   else if(P.playing && TTS.ok){suspendSpeech();}
   else{renderScene(card,LESSONS[P.idx].lesson,P.scene);playScene();}
 }
-function likeLesson(idx, on){
-  const it=LESSONS[idx]; if(!it) return;
-  const id=it.id;
-  S.likes[id]=on; Store.save();
-  const card=cardAt(idx);
-  const btn=card.querySelector('[data-act="like"]');
-  btn.classList.toggle("on",on);
-  btn.querySelector(".ic").textContent=on?"❤️":"🤍";
-  btn.querySelector(".n").textContent=on?"1":"0";
-}
 function saveLesson(idx,on){
   const it=LESSONS[idx]; if(!it) return;
   const id=it.id;
@@ -1070,35 +1091,57 @@ async function shareLesson(idx){
     catch(e2){ toast(text,4000); }
   }
 }
-let lastTap=0;
+function quizChoices(it){
+  const choices=[{text:it.lesson.takeaway,correct:true}];
+  it.book.lessons.forEach((l,i)=>{
+    if(i!==it.n-1 && l.takeaway && !choices.some(x=>x.text===l.takeaway)) choices.push({text:l.takeaway,correct:false});
+  });
+  for(const point of (it.lesson.points||[])){
+    if(choices.length>=3) break;
+    if(point && !choices.some(x=>x.text===point)) choices.push({text:point,correct:false});
+  }
+  while(choices.length<3) choices.push({text:"La lezione non offre consigli pratici.",correct:false});
+  return choices.slice(0,3).sort((a,b)=>hash(it.id+a.text)-hash(it.id+b.text));
+}
+function openQuiz(idx){
+  const it=LESSONS[idx]; if(!it) return;
+  const options=quizChoices(it), sheet=$("#quizSheet");
+  sheet.innerHTML=`<button class="x" data-close aria-label="Chiudi quiz">✕</button>
+    <div class="quiz-kicker">🧠 Mini quiz · un tocco per rispondere</div>
+    <h2 style="margin:0 0 5px">${esc(it.lesson.title)}</h2>
+    <p class="sub" style="margin-bottom:14px">${esc(it.book.title)}</p>
+    <p class="quiz-question">Quale idea riassume meglio questa micro-lezione?</p>
+    <div class="quiz-options">${options.map((o,i)=>`<button class="quiz-option" data-answer="${i}">${esc(o.text)}</button>`).join("")}</div>
+    <div class="quiz-feedback hidden" id="quizFeedback"></div>
+    <div class="quiz-actions hidden" id="quizActions"><button class="btn ghost" id="quizRetry">Riprova</button><button class="btn" id="quizClose">Torna alla lezione</button></div>`;
+  sheet.querySelector("[data-close]").onclick=()=>closeModal("quizModal");
+  sheet.querySelectorAll("[data-answer]").forEach(btn=>btn.onclick=()=>{
+    if(btn.disabled) return;
+    const chosen=options[Number(btn.dataset.answer)], feedback=$("#quizFeedback");
+    sheet.querySelectorAll("[data-answer]").forEach((b,i)=>{
+      b.disabled=true;
+      if(options[i].correct) b.classList.add("correct");
+      else if(i===Number(btn.dataset.answer)) b.classList.add("incorrect");
+    });
+    S.quiz[it.id]={correct:chosen.correct,at:Date.now()}; Store.save();
+    feedback.className="quiz-feedback "+(chosen.correct?"good":"bad");
+    feedback.textContent=chosen.correct?"Esatto! Hai colto il punto. ✨":"Quasi! La sintesi di questa lezione era: "+it.lesson.takeaway;
+    $("#quizActions").classList.remove("hidden");
+    $("#quizRetry").onclick=()=>openQuiz(idx);
+    $("#quizClose").onclick=()=>closeModal("quizModal");
+  });
+  openModal("quizModal");
+}
 function onFeedClick(e){
-  const btn=e.target.closest("button[data-act]");
-  const card=e.target.closest(".card"); if(!card) return;
-  const idx=+card.dataset.idx;
-  if(btn){
-    const act=btn.dataset.act;
-    if(act==="like") likeLesson(idx,!S.likes[LESSONS[idx].id]);
-    if(act==="save") saveLesson(idx,!S.saves[LESSONS[idx].id]);
-    if(act==="share") shareLesson(idx);
-    if(act==="pause" && idx===P.idx) togglePause();
-    if(act==="prev-slide" && idx===P.idx) goSlide(-1);
-    if(act==="next-slide" && idx===P.idx) goSlide(1);
-    return;
-  }
-  audioUnlocked=true;
-  const now=Date.now();
-  if(now-lastTap<280){
-    lastTap=0;
-    if(!S.likes[LESSONS[idx].id]){
-      likeLesson(idx,true);
-      const r=card.getBoundingClientRect();
-      const h=document.createElement("div"); h.className="heart-burst"; h.textContent="❤️";
-      h.style.left=(e.clientX-r.left)+"px"; h.style.top=(e.clientY-r.top)+"px";
-      card.appendChild(h); setTimeout(()=>h.remove(),850);
-    }
-    return;
-  }
-  lastTap=now;
+  const btn=e.target.closest("button[data-act]"); if(!btn) return;
+  const card=btn.closest(".card"); if(!card) return;
+  const idx=+card.dataset.idx, act=btn.dataset.act;
+  if(act==="save") saveLesson(idx,!S.saves[LESSONS[idx].id]);
+  if(act==="share") shareLesson(idx);
+  if(act==="pause" && idx===P.idx) togglePause();
+  if(act==="quiz") openQuiz(idx);
+  if(act==="prev-slide" && idx===P.idx) goSlide(-1);
+  if(act==="next-slide" && idx===P.idx) goSlide(1);
 }
 
 /* ---------- VIEWS / TABS ---------- */
@@ -1516,7 +1559,7 @@ $("#setVoice").addEventListener("change",e=>{
   S.settings.voice=e.target.value; Store.save(); TTS.pick();
 });
 $("#resetBtn").onclick=()=>{
-  if(confirm("Azzerare like, salvataggi, progressi, libri generati e chiave?")){
+  if(confirm("Azzerare salvataggi, progressi, quiz, libri generati e chiave?")){ 
     try{ localStorage.removeItem("sfoglia_v1"); }catch(e){}
     location.reload();
   }

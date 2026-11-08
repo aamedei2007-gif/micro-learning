@@ -13,10 +13,12 @@ Il prototipo conserva la chiave nel browser usato. La richiesta va direttamente 
 
 Il file ZIP contiene una **PWA**: una piccola app web installabile. Per installarla bene su Android/iPhone, pubblicala prima su un indirizzo HTTPS. Un modo gratuito è GitHub Pages:
 
+Se hai già pubblicato una versione precedente e vuoi aggiornare l'icona, carica nel repository i nuovi `icon-192.png`, `icon-512.png`, `manifest.json` e `sw.js` inclusi nello ZIP, sostituendo i file esistenti. Poi rimuovi e reinstalla la PWA sul dispositivo per aggiornare l'icona.
+
 1. Scarica ed estrai `sfoglia-app.zip` sul computer.
 2. Accedi o crea un account su [GitHub](https://github.com/).
 3. Crea un nuovo repository, per esempio `sfoglia-app`. Per rendere la pagina pubblica senza costi, scegli **Public**.
-4. Dopo l'estrazione, apri la cartella `sfoglia` e carica i suoi file direttamente nella cartella principale del repository: `index.html`, `manifest.json`, `sw.js`, `icon.svg`, `icon-192.png`, `icon-512.png` e i file guida. Non caricare la cartella contenitore come unica sottocartella.
+4. Dopo l'estrazione, apri la cartella `sfoglia` e carica i suoi file direttamente nella cartella principale del repository: `index.html`, `manifest.json`, `sw.js`, `icon-192.png`, `icon-512.png` e i file guida. Non caricare la cartella contenitore come unica sottocartella.
 5. Nel repository apri **Settings → Pages**. Sotto **Build and deployment**, scegli **Deploy from a branch**, branch `main`, cartella `/(root)`, quindi **Save**.
 6. Attendi la pubblicazione. GitHub mostrerà un indirizzo simile a `https://tuonome.github.io/sfoglia-app/`.
 7. Apri quell'indirizzo sul telefono:

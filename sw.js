@@ -1,5 +1,5 @@
-const CACHE = "sfoglia-shell-v2";
-const SHELL = ["./", "./index.html", "./manifest.json", "./icon.svg", "./icon-192.png", "./icon-512.png"];
+const CACHE = "sfoglia-shell-v4";
+const SHELL = ["./", "./index.html", "./manifest.json", "./icon-192.png", "./icon-512.png"];
 self.addEventListener("install", event => {
   event.waitUntil(caches.open(CACHE).then(cache => cache.addAll(SHELL)).then(() => self.skipWaiting()));
 });
