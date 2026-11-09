@@ -219,6 +219,37 @@ button{font-family:inherit;color:inherit}
 .lrow .t b{display:block;font-size:14px;margin-bottom:2px}
 .lrow .t span{font-size:12px;color:var(--mut)}
 .lrow .st{font-size:16px}
+.folder-section-title{font-size:10px;font-weight:900;letter-spacing:.12em;color:var(--mut);text-transform:uppercase;margin:16px 0 8px}
+.folder-grid{display:grid;gap:7px;margin-bottom:14px}
+.folder-card{display:flex;align-items:stretch;gap:4px;border:1px solid var(--line);border-radius:13px;background:var(--card);overflow:hidden}
+.folder-card.active{border-color:var(--acc1);box-shadow:0 0 0 1px rgba(255,94,126,.16)}
+.folder-open{flex:1;min-width:0;display:flex;align-items:center;gap:10px;padding:10px 12px;text-align:left;border:0;background:transparent;color:var(--txt);cursor:pointer}
+.folder-open svg{width:21px;height:21px;flex:0 0 21px;stroke:#fff}
+.folder-open b{display:block;font-size:12px;line-height:1.25;overflow-wrap:anywhere}
+.folder-open small{display:block;margin-top:2px;color:var(--mut);font-size:10px}
+.folder-tools{display:flex;align-items:center;gap:2px;padding-right:6px}
+.folder-tools button,.saved-move{width:34px;height:34px;display:grid;place-items:center;border:1px solid var(--line);border-radius:10px;background:rgba(255,255,255,.05);color:#fff;font-size:16px;cursor:pointer}
+.folder-tools button svg,.saved-move svg{width:17px;height:17px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.saved-current-title{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:12px 0 9px;font-size:12px;color:var(--mut)}
+.saved-current-title b{color:var(--txt);font-size:13px}
+.saved-item{cursor:default;padding:9px;gap:8px}
+.saved-item:active{transform:none}
+.saved-open{flex:1;min-width:0;display:flex;align-items:center;gap:11px;padding:3px;border:0;background:transparent;text-align:left;color:var(--txt);cursor:pointer}
+.saved-open .n{flex:0 0 34px;height:34px;display:flex;align-items:center;justify-content:center;border-radius:10px;background:var(--grad);color:#1b0a10;font-size:18px}
+.saved-open .t{flex:1;min-width:0}
+.saved-open .t b{display:block;font-size:13px;margin-bottom:3px}
+.saved-open .t span{display:block;font-size:10px;color:var(--mut);line-height:1.35}
+.saved-move{flex:0 0 36px;width:36px;height:36px;font-size:15px}
+.folder-choices{display:grid;gap:8px;margin-top:14px}
+.folder-choice{width:100%;display:flex;align-items:center;gap:10px;text-align:left;padding:11px 12px;border:1px solid var(--line);border-radius:12px;background:var(--card);color:var(--txt);cursor:pointer}
+.folder-choice:active{transform:scale(.99)}
+.folder-choice .f-icon{width:23px;height:23px;flex:0 0 23px;display:grid;place-items:center;color:#fff;font-size:21px}
+.folder-choice .f-icon svg{width:21px;height:21px;stroke:#fff;fill:none}
+.folder-choice>span:nth-child(2){flex:1;min-width:0}
+.folder-choice b{display:block;font-size:12px}
+.folder-choice small{display:block;color:var(--mut);font-size:10px;margin-top:2px}
+.folder-choice .f-check{color:#83e9a7;font-weight:900}
+.folder-choice.create-choice{border-style:dashed;color:var(--acc2)}
 .quiz-kicker{display:flex;align-items:center;gap:7px;font-size:10px;font-weight:900;letter-spacing:.16em;color:var(--acc2);text-transform:uppercase;margin:4px 0 8px}
 .quiz-kicker svg{width:17px;height:17px;flex:0 0 17px;display:block;stroke:#fff}
 .quiz-question{font-size:18px;font-weight:800;line-height:1.3;margin:0 34px 16px 0}
@@ -300,6 +331,22 @@ input[type=range]{width:130px;accent-color:var(--acc1)}
 .book-result span{font-size:11px;color:var(--mut)}
 .book-result .bdesc{display:block;margin-top:5px;line-height:1.4;max-height:34px;overflow:hidden}
 .book-selected{font-size:11px;color:#7de8a8;padding:7px 10px;border-radius:9px;background:rgba(60,220,130,.1)}
+.chapter-panel{margin-top:10px;padding:12px;border:1px solid var(--line);border-radius:14px;background:rgba(255,255,255,.035)}
+.chapter-head{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:4px}
+.chapter-head b{font-size:12px}
+.chapter-source,.chapter-note{font-size:10px;line-height:1.45;color:var(--mut);margin:4px 0 9px}
+.chapter-list{display:grid;gap:6px;max-height:230px;overflow:auto;padding-right:2px}
+.chapter-row{width:100%;display:flex;align-items:center;gap:9px;text-align:left;padding:9px 10px;border:1px solid var(--line);border-radius:10px;background:var(--card);color:var(--txt);cursor:pointer}
+.chapter-row:active{transform:scale(.99)}
+.chapter-row .ch-num{width:23px;height:23px;flex:0 0 23px;display:grid;place-items:center;border-radius:7px;background:rgba(255,255,255,.1);font-size:10px;font-weight:800;color:var(--acc2)}
+.chapter-row .ch-title{flex:1;font-size:11px;line-height:1.35}
+.chapter-row .ch-page,.chapter-row .ch-done{font-size:10px;color:var(--mut);white-space:nowrap}
+.chapter-row.done{border-color:rgba(60,220,130,.35)}
+.chapter-row.done .ch-done{color:#83e9a7}
+.chapter-manual{margin-top:10px}
+.chapter-manual textarea{min-height:80px}
+.chapter-manual .btn{margin-top:7px;padding:9px;font-size:12px}
+.chapter-pick-hint{font-size:10px;color:var(--acc2);margin-top:7px}
 .gen-status{display:none;margin-top:16px;padding:16px;border-radius:14px;background:var(--card);border:1px solid var(--line)}
 .gen-status.show{display:block}
 .gen-step{display:flex;align-items:center;gap:10px;font-size:13px;color:var(--mut);padding:5px 0}
@@ -393,6 +440,9 @@ input[type=range]{width:130px;accent-color:var(--acc1)}
     <div class="page">
       <h1>Salvati</h1>
       <p class="lead">Le micro-lezioni che vuoi rivedere.</p>
+      <button class="btn ghost block" id="newFolderBtn" style="margin-bottom:14px">＋ Nuova cartella</button>
+      <div id="savedFolders"></div>
+      <div id="savedCurrentFolder"></div>
       <div id="savedList"></div>
     </div>
   </div>
@@ -475,20 +525,21 @@ input[type=range]{width:130px;accent-color:var(--acc1)}
     <div class="sheet">
       <button class="x" data-close>✕</button>
       <h2>✨ Genera un libro</h2>
-      <p class="sub">Scrivi un titolo: l'IA lo trasforma in micro-lezioni verticali, pronte da sfogliare.</p>
+      <p class="sub">Trova il libro, scegli un capitolo dall’indice e crea un gruppo di micro-lezioni dedicato.</p>
       <div id="keyChip"></div>
       <div class="field">
-        <label>Cerca un libro *</label>
-        <input id="genTitle" placeholder="Titolo o autore, es. Il nome della rosa" autocomplete="off">
-        <div class="hint" style="margin:6px 2px 0">Cerchiamo edizioni e metadati su Google Books, con Open Library come alternativa. I cataloghi non recuperano automaticamente il testo completo del libro.</div>
-        <div id="bookResults" class="book-results"></div>
+        <label>Titolo del libro *</label>
+        <input id="genTitle" placeholder="Es. Il nome della rosa" autocomplete="off">
       </div>
       <div class="field">
-        <label>Autore (opzionale)</label>
+        <label>Autore (consigliato per trovare l’edizione corretta)</label>
         <input id="genAuthor" placeholder="Es. Umberto Eco" autocomplete="off">
       </div>
+      <div class="hint" style="margin:-4px 2px 8px">Dopo la ricerca scegli l’edizione. Sfoglia prova a recuperare l’indice dei capitoli; se non è disponibile, puoi incollarlo. Non viene scaricato il testo integrale.</div>
+      <div id="bookResults" class="book-results"></div>
+      <div id="chapterPanel" class="chapter-panel hidden"></div>
       <div class="field">
-        <label>Capitolo o argomento (facoltativo)</label>
+        <label>Capitolo selezionato o argomento libero</label>
         <input id="genChapter" placeholder="Es. Capitolo 3: Il labirinto" autocomplete="off">
       </div>
       <div class="field">
@@ -496,7 +547,7 @@ input[type=range]{width:130px;accent-color:var(--acc1)}
         <textarea id="genNotes" maxlength="2500" placeholder="Aggiungi appunti brevi per rendere la spiegazione più precisa (max 2.500 caratteri). Non incollare un capitolo intero."></textarea>
       </div>
       <div class="field">
-        <label>Numero di micro-lezioni</label>
+        <label>Numero di micro-lezioni per questo capitolo</label>
         <select id="genCount"><option>3</option><option selected>4</option><option>5</option><option>6</option></select>
       </div>
       <div class="hint" style="margin:0 0 12px">Nota privacy: con Gemini, titolo, capitolo e appunti vengono inviati a Google. Nel livello gratuito i prompt possono essere usati per migliorare i prodotti Google.</div>
@@ -509,6 +560,16 @@ input[type=range]{width:130px;accent-color:var(--acc1)}
   <div class="modal" id="bookModal">
     <div class="shade" data-close></div>
     <div class="sheet" id="bookSheet"></div>
+  </div>
+
+  <!-- CARTELLE DEI SALVATI -->
+  <div class="modal" id="folderCreateModal">
+    <div class="shade" data-close></div>
+    <div class="sheet" id="folderCreateSheet"></div>
+  </div>
+  <div class="modal" id="folderAssignModal">
+    <div class="shade" data-close></div>
+    <div class="sheet" id="folderAssignSheet"></div>
   </div>
 
   <!-- MAPPA VISUALE DELLA LEZIONE -->
@@ -529,7 +590,7 @@ input[type=range]{width:130px;accent-color:var(--acc1)}
     <h1><em>Sfoglia</em></h1>
     <p>Il TikTok dei libri. Scorri in orizzontale le slide di una lezione, in verticale per passare al libro successivo. Gratis, senza account.</p>
     <div class="feats">
-      <div class="feat"><span>✨</span> Scrivi un titolo → l'app crea le micro-lezioni</div>
+      <div class="feat"><span>✨</span> Cerca titolo e autore → scegli i capitoli da studiare</div>
       <div class="feat"><span>↔️</span> Slide sfogliabili, senza avanzamento automatico</div>
       <div class="feat"><span>🎧</span> Voce in pausa/ripresa sullo stesso punto</div>
       <div class="feat"><span><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6 9 3l6 3 6-3v15l-6 3-6-3-6 3V6Z"/><path d="M9 3v15m6-12v15"/></svg></span> Mappe visuali della lezione, apribili quando vuoi</div>
@@ -756,12 +817,14 @@ const BOOKS = [
 const Store = {
   data:null,
   load(){
-    const def = {saves:{},done:{},quiz:{},generated:[],key:"",settings:{audio:true,rate:1,voice:""},seenIntro:false,lastLesson:"",days:[]};
+    const def = {saves:{},folderByLesson:{},folders:[],done:{},quiz:{},generated:[],key:"",settings:{audio:true,rate:1,voice:""},seenIntro:false,lastLesson:"",days:[]};
     try{
       const raw = localStorage.getItem("sfoglia_v1");
       const parsed = raw ? JSON.parse(raw) : {};
       this.data = Object.assign({}, def, parsed);
       this.data.settings = Object.assign({}, def.settings, parsed.settings||{});
+      this.data.folders = Array.isArray(parsed.folders)?parsed.folders:[];
+      this.data.folderByLesson = parsed.folderByLesson && typeof parsed.folderByLesson==="object"?parsed.folderByLesson:{};
       delete this.data.likes;
     }catch(e){ this.data = def; }
     return this.data;
@@ -778,6 +841,7 @@ const $$ = s => [...document.querySelectorAll(s)];
 const esc = s => String(s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 const ICON_MAP = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6 9 3l6 3 6-3v15l-6 3-6-3-6 3V6Z"/><path d="M9 3v15m6-12v15"/></svg>`;
 const ICON_BRAIN = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20V5.4c0-1.7-1.3-3-3-3s-3 1.3-3 3c-1.9.2-3.3 1.8-3.3 3.7 0 .9.4 1.8 1.1 2.4a3.4 3.4 0 0 0 2.4 5.8c.4 1.7 1.8 2.9 3.5 2.9 1 0 1.8-.4 2.3-1.1Z"/><path d="M12 5.4c0-1.7 1.3-3 3-3s3 1.3 3 3c1.9.2 3.3 1.8 3.3 3.7 0 .9-.4 1.8-1.1 2.4a3.4 3.4 0 0 1-2.4 5.8c-.4 1.7-1.8 2.9-3.5 2.9-1 0-1.8-.4-2.3-1.1Z"/><path d="M6.8 7.5c1.8 0 2.7 1 2.7 2.5m-5.2 3.5c2.3 0 3.5 1.1 3.5 3m9.4-9c-1.8 0-2.7 1-2.7 2.5m5.2 3.5c-2.3 0-3.5 1.1-3.5 3"/></svg>`;
+const ICON_FOLDER = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6.5A2.5 2.5 0 0 1 5.5 4H10l2 2h6.5A2.5 2.5 0 0 1 21 8.5v9a2.5 2.5 0 0 1-2.5 2.5h-13A2.5 2.5 0 0 1 3 17.5z"/><path d="M3.5 9h17"/></svg>`;
 const norm = s => String(s).toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/[^a-z0-9]+/g," ").trim();
 const hash = s => { let h=5381; for(let i=0;i<s.length;i++) h=((h<<5)+h+s.charCodeAt(i))|0; return Math.abs(h); };
 const fmt = n => n>=1000 ? (n/1000).toFixed(1).replace(".",",")+"K" : String(n);
@@ -1098,7 +1162,9 @@ function togglePause(){
 function saveLesson(idx,on){
   const it=LESSONS[idx]; if(!it) return;
   const id=it.id;
-  S.saves[id]=on; Store.save();
+  S.saves[id]=on;
+  if(!on) delete S.folderByLesson[id];
+  Store.save();
   const card=cardAt(idx);
   const btn=card.querySelector('[data-act="save"]');
   btn.classList.toggle("on",on);
@@ -1247,8 +1313,10 @@ function openBook(id){
   const del=$("#delBook");
   if(del) del.onclick=()=>{
     if(confirm("Eliminare questo libro generato?")){
-      S.generated=S.generated.filter(x=>x.id!==b.id); Store.save();
-      closeModal("bookModal"); buildFeed(); renderBooks(); renderProfile();
+      S.generated=S.generated.filter(x=>x.id!==b.id);
+      Object.keys(S.saves).filter(id=>id.startsWith(b.id+"::")).forEach(id=>{delete S.saves[id];delete S.folderByLesson[id];});
+      Store.save();
+      closeModal("bookModal"); buildFeed(); renderBooks(); renderSaved(); renderProfile();
       toast("Libro eliminato");
     }
   };
@@ -1259,24 +1327,126 @@ function gotoLesson(id){
   buildFeed(id); switchView("feed");
 }
 
-/* ---------- SALVATI ---------- */
-function renderSaved(){
-  const box=$("#savedList"); box.innerHTML="";
-  const saved=allLessons().filter(x=>S.saves[x.id]);
-  if(!saved.length){
-    box.innerHTML='<div class="empty"><span class="big">🔖</span>Nessuna lezione salvata.<br>Tocca l\'icona segnalibro nel feed per salvarne una.</div>';
-    return;
-  }
-  saved.forEach(it=>{
-    const el=document.createElement("button"); el.className="lrow";
-    el.innerHTML=`<div class="n">${it.book.emoji||"📖"}</div>
-      <div class="t"><b>${esc(it.lesson.title)}</b><span>${esc(it.book.title)} · ~${lessonDuration(it.lesson)}s</span></div>
-      <div class="st">▶️</div>`;
-    el.onclick=()=>gotoLesson(it.id);
-    box.appendChild(el);
-  });
+/* ---------- SALVATI / CARTELLE ---------- */
+let savedFolderView="all", pendingFolderLesson=null;
+function folderById(id){return S.folders.find(f=>f.id===id);}
+function openFolderCreate(lessonId=null){
+  pendingFolderLesson=lessonId;
+  const sheet=$("#folderCreateSheet");
+  sheet.innerHTML=`<button class="x" data-close aria-label="Chiudi">✕</button><h2>📁 Nuova cartella</h2>
+    <p class="sub">Raggruppa le micro-lezioni salvate, ad esempio con il titolo del libro.</p>
+    <div class="field"><label for="folderNameInput">Nome della cartella</label><input id="folderNameInput" maxlength="40" placeholder="Es. Il nome della rosa" autocomplete="off"></div>
+    <p class="hint hidden" id="folderCreateError"></p><button class="btn block" id="folderCreateConfirm">Crea cartella</button>`;
+  sheet.querySelector("[data-close]").onclick=()=>closeModal("folderCreateModal");
+  $("#folderCreateConfirm").onclick=createFolderFromInput;
+  $("#folderNameInput").onkeydown=e=>{if(e.key==="Enter"){e.preventDefault();createFolderFromInput();}};
+  openModal("folderCreateModal"); setTimeout(()=>$("#folderNameInput").focus(),100);
 }
-
+function createFolderFromInput(){
+  const input=$("#folderNameInput"), name=input.value.trim().slice(0,40), err=$("#folderCreateError");
+  if(!name){err.textContent="Scrivi un nome per la cartella.";err.classList.remove("hidden");return;}
+  if(S.folders.some(f=>norm(f.name)===norm(name))){err.textContent="Esiste già una cartella con questo nome.";err.classList.remove("hidden");return;}
+  const folder={id:"folder-"+Date.now().toString(36)+"-"+Math.random().toString(36).slice(2,7),name,createdAt:Date.now()};
+  S.folders.push(folder);
+  if(pendingFolderLesson) S.folderByLesson[pendingFolderLesson]=folder.id;
+  pendingFolderLesson=null; savedFolderView=folder.id; Store.save(); closeModal("folderCreateModal"); renderSaved(); toast("Cartella creata 📁");
+}
+function sameBookGroup(a,b){
+  const sa=a?.sourceBook||{}, sb=b?.sourceBook||{};
+  if(sa.workKey&&sb.workKey&&sa.workKey===sb.workKey)return true;
+  const ai=[...(sa.isbns||[]),sa.isbn].filter(Boolean), bi=[...(sb.isbns||[]),sb.isbn].filter(Boolean);
+  if(ai.some(x=>bi.includes(x)))return true;
+  const titleA=norm(sa.title||a?.title||""), titleB=norm(sb.title||b?.title||"");
+  const authorA=norm(sa.author||a?.author||""), authorB=norm(sb.author||b?.author||"");
+  return !!titleA&&titleA===titleB&&(!authorA||!authorB||authorA===authorB);
+}
+function openFolderAssignment(lessonId){
+  const it=allLessons().find(x=>x.id===lessonId); if(!it)return;
+  const current=S.folderByLesson[lessonId], sheet=$("#folderAssignSheet");
+  const bookFolderName=String(it.book.title||"Libro").trim().slice(0,40)||"Libro";
+  const matchingBookFolder=S.folders.find(f=>norm(f.name)===norm(bookFolderName));
+  sheet.innerHTML=`<button class="x" data-close aria-label="Chiudi">✕</button><h2>Organizza lezione</h2>
+    <p class="sub">${esc(it.lesson.title)}<br>${esc(it.book.title)}</p>
+    <div class="folder-choices">
+      ${matchingBookFolder?`<button class="folder-choice" id="assignBookFolder"><span class="f-icon">${ICON_FOLDER}</span><span><b>Cartella del libro</b><small>Organizza qui tutte le lezioni salvate di “${esc(matchingBookFolder.name)}”</small></span>${current===matchingBookFolder.id?'<span class="f-check">✓</span>':""}</button>`:`<button class="folder-choice create-choice" id="createBookFolder"><span class="f-icon">＋</span><span><b>Crea cartella del libro</b><small>“${esc(bookFolderName)}” · raccogli tutte le lezioni salvate di questo libro</small></span></button>`}
+      <button class="folder-choice" data-folder-choice="none"><span class="f-icon">${ICON_FOLDER}</span><span><b>Senza cartella</b><small>Rimuovi l’organizzazione</small></span>${!current?'<span class="f-check">✓</span>':""}</button>
+      ${S.folders.map(f=>`<button class="folder-choice" data-folder-choice="${esc(f.id)}"><span class="f-icon">${ICON_FOLDER}</span><span><b>${esc(f.name)}</b><small>${current===f.id?"Cartella attuale":"Sposta in questa cartella"}</small></span>${current===f.id?'<span class="f-check">✓</span>':""}</button>`).join("")}
+      <button class="folder-choice create-choice" id="createFolderFromAssign"><span class="f-icon">＋</span><span><b>Nuova cartella</b><small>Crea e sposta qui la lezione</small></span></button>
+    </div>`;
+  sheet.querySelector("[data-close]").onclick=()=>closeModal("folderAssignModal");
+  sheet.querySelectorAll("[data-folder-choice]").forEach(btn=>btn.onclick=()=>{
+    setSavedLessonFolder(lessonId,btn.dataset.folderChoice); closeModal("folderAssignModal");
+  });
+  $("#createFolderFromAssign").onclick=()=>{closeModal("folderAssignModal");openFolderCreate(lessonId);};
+  const createBookFolder=$("#createBookFolder");
+  if(createBookFolder) createBookFolder.onclick=()=>{
+    const name=bookFolderName, folder={id:"folder-"+Date.now().toString(36)+"-"+Math.random().toString(36).slice(2,7),name,createdAt:Date.now()};
+    S.folders.push(folder); setSavedBookFolder(it,folder.id); closeModal("folderAssignModal");
+  };
+  const assignBookFolderBtn=$("#assignBookFolder");
+  if(assignBookFolderBtn) assignBookFolderBtn.onclick=()=>{setSavedBookFolder(it,matchingBookFolder.id);closeModal("folderAssignModal");};
+  openModal("folderAssignModal");
+}
+function setSavedLessonFolder(lessonId,folderId){
+  if(folderId==="none"||!folderById(folderId)) delete S.folderByLesson[lessonId];
+  else S.folderByLesson[lessonId]=folderId;
+  Store.save(); renderSaved(); toast(folderById(folderId)?"Lezione spostata nella cartella":"Lezione senza cartella");
+}
+function setSavedBookFolder(reference,folderId){
+  const folder=folderById(folderId); if(!folder)return;
+  const group=allLessons().filter(x=>S.saves[x.id]&&sameBookGroup(x.book,reference.book));
+  group.forEach(x=>S.folderByLesson[x.id]=folderId);
+  if(S.saves[reference.id]&&!group.some(x=>x.id===reference.id))S.folderByLesson[reference.id]=folderId;
+  savedFolderView=folderId; Store.save(); renderSaved();
+  toast(`${group.length||1} ${group.length===1?"lezione raccolta":"lezioni raccolte"} nella cartella “${folder.name}”`);
+}
+function renameSavedFolder(folderId){
+  const f=folderById(folderId); if(!f)return;
+  const value=prompt("Nuovo nome della cartella:",f.name); if(value===null)return;
+  const name=value.trim().slice(0,40); if(!name){toast("Il nome non può essere vuoto");return;}
+  if(S.folders.some(x=>x.id!==folderId&&norm(x.name)===norm(name))){toast("Esiste già una cartella con questo nome");return;}
+  f.name=name; Store.save(); renderSaved();
+}
+function deleteSavedFolder(folderId){
+  const f=folderById(folderId); if(!f)return;
+  if(!confirm(`Eliminare la cartella “${f.name}”? Le lezioni salvate resteranno senza cartella.`))return;
+  S.folders=S.folders.filter(x=>x.id!==folderId);
+  Object.keys(S.folderByLesson).forEach(id=>{if(S.folderByLesson[id]===folderId)delete S.folderByLesson[id];});
+  if(savedFolderView===folderId)savedFolderView="all";
+  Store.save(); renderSaved(); toast("Cartella eliminata; le lezioni sono rimaste nei salvati");
+}
+function renderSaved(){
+  const box=$("#savedList"), foldersBox=$("#savedFolders"), currentBox=$("#savedCurrentFolder");
+  if(!box||!foldersBox||!currentBox)return;
+  box.innerHTML="";
+  const saved=allLessons().filter(x=>S.saves[x.id]);
+  if(savedFolderView!=="all"&&savedFolderView!=="unfiled"&&!folderById(savedFolderView))savedFolderView="all";
+  const countIn=id=>saved.filter(it=>id==="all"?true:id==="unfiled"?!folderById(S.folderByLesson[it.id]):S.folderByLesson[it.id]===id).length;
+  const card=(id,name,sub,editable=false)=>`<div class="folder-card${savedFolderView===id?" active":""}">
+    <button class="folder-open" data-folder-view="${esc(id)}">${ICON_FOLDER}<span><b>${esc(name)}</b><small>${esc(sub)}</small></span></button>
+    ${editable?`<div class="folder-tools"><button data-rename-folder="${esc(id)}" aria-label="Rinomina ${esc(name)}" title="Rinomina">✎</button><button data-delete-folder="${esc(id)}" aria-label="Elimina ${esc(name)}" title="Elimina">×</button></div>`:""}
+    </div>`;
+  foldersBox.innerHTML=`<div class="folder-section-title">Cartelle</div><div class="folder-grid">
+    ${card("all","Tutte le lezioni salvate",`${saved.length} lezioni`)}
+    ${card("unfiled","Senza cartella",`${countIn("unfiled")} lezioni non organizzate`)}
+    ${S.folders.map(f=>card(f.id,f.name,`${countIn(f.id)} ${countIn(f.id)===1?"lezione":"lezioni"}`,true)).join("")}
+    </div>`;
+  foldersBox.querySelectorAll("[data-folder-view]").forEach(btn=>btn.onclick=()=>{savedFolderView=btn.dataset.folderView;renderSaved();});
+  foldersBox.querySelectorAll("[data-rename-folder]").forEach(btn=>btn.onclick=()=>renameSavedFolder(btn.dataset.renameFolder));
+  foldersBox.querySelectorAll("[data-delete-folder]").forEach(btn=>btn.onclick=()=>deleteSavedFolder(btn.dataset.deleteFolder));
+  const folder=savedFolderView==="all"?null:savedFolderView==="unfiled"?null:folderById(savedFolderView);
+  const visible=saved.filter(it=>savedFolderView==="all"?true:savedFolderView==="unfiled"?!folderById(S.folderByLesson[it.id]):S.folderByLesson[it.id]===savedFolderView);
+  const currentName=savedFolderView==="all"?"Tutte le lezioni salvate":savedFolderView==="unfiled"?"Senza cartella":folder?.name||"Tutte le lezioni salvate";
+  currentBox.innerHTML=`<div class="saved-current-title"><b>${esc(currentName)}</b><span>${visible.length} ${visible.length===1?"lezione":"lezioni"}</span></div>`;
+  if(!saved.length){box.innerHTML='<div class="empty"><span class="big">🔖</span>Nessuna lezione salvata.<br>Tocca il segnalibro nel feed per salvarne una, poi organizzala in una cartella.</div>';return;}
+  if(!visible.length){box.innerHTML='<div class="empty" style="padding:28px 18px">Questa cartella è vuota.<br>Usa l’icona cartella accanto a una lezione per spostarla qui.</div>';return;}
+  box.innerHTML=visible.map(it=>`<div class="lrow saved-item">
+    <button class="saved-open" data-open-saved="${esc(it.id)}"><span class="n">${esc(it.book.emoji||"📖")}</span><span class="t"><b>${esc(it.lesson.title)}</b><span>${esc(it.book.title)}${it.book.chapter?" · "+esc(it.book.chapter):""} · ~${lessonDuration(it.lesson)}s</span></span><span class="st">▶️</span></button>
+    <button class="saved-move" data-move-saved="${esc(it.id)}" aria-label="Sposta in cartella" title="Sposta in cartella">${ICON_FOLDER}</button>
+    </div>`).join("");
+  box.querySelectorAll("[data-open-saved]").forEach(btn=>btn.onclick=()=>gotoLesson(btn.dataset.openSaved));
+  box.querySelectorAll("[data-move-saved]").forEach(btn=>btn.onclick=()=>openFolderAssignment(btn.dataset.moveSaved));
+}
 /* ---------- PROFILO ---------- */
 function streak(){
   const days=[...new Set(S.days)].sort();
@@ -1415,15 +1585,176 @@ function stepOk(i){
 }
 const sleep=ms=>new Promise(r=>setTimeout(r,ms));
 let selectedGoogleBook=null, bookSearchTimer=null, bookSearchSeq=0, bookSearchAbort=null, lastBookResults=[];
+function chapterDisplayName(ch){return [ch.label,ch.title].filter(Boolean).join(" — ")||"Capitolo";}
+function chapterHasGenerated(book,chapter){
+  const wanted=norm(chapterDisplayName(chapter));
+  return S.generated.some(g=>{
+    if(norm(g.chapter||"")!==wanted) return false;
+    const src=g.sourceBook||{};
+    if((book.isbns||[]).some(isbn=>src.isbn===isbn||(src.isbns||[]).includes(isbn))) return true;
+    return !!((book.id && (src.id===book.id || src.workKey===book.id || src.editionKey===book.editionKey)) || (book.workKey && src.workKey===book.workKey));
+  });
+}
+function renderChapterRows(book,chapters,sourceLabel){
+  const panel=$("#chapterPanel");
+  book.tocChapters=chapters; book.tocSource=sourceLabel;
+  panel.classList.remove("hidden");
+  const warning=book.tocWarning?`<p class="chapter-note" style="color:#ffd080">⚠️ ${esc(book.tocWarning)}</p>`:"";
+  panel.innerHTML=`<div class="chapter-head"><b>Indice dei capitoli</b><span style="font-size:10px;color:var(--acc2)">${chapters.length} voci</span></div>
+    <p class="chapter-source">${esc(sourceLabel)}. Tocca un capitolo per selezionarlo: verrà creato un gruppo di micro-lezioni dedicato.</p>${warning}
+    <div class="chapter-list">${chapters.map((ch,i)=>{
+      const done=chapterHasGenerated(book,ch);
+      return `<button type="button" class="chapter-row${done?" done":""}" data-toc-index="${i}"><span class="ch-num">${esc(ch.label||String(i+1))}</span><span class="ch-title">${esc(ch.title||ch.label||"Capitolo")}</span>${ch.page?`<span class="ch-page">p. ${esc(ch.page)}</span>`:""}${done?'<span class="ch-done">✓ creato</span>':""}</button>`;
+    }).join("")}</div><div class="chapter-pick-hint" id="chapterPickHint">Seleziona un capitolo, poi premi “Genera micro-lezioni”.</div>`;
+  panel.querySelectorAll("[data-toc-index]").forEach(btn=>btn.onclick=()=>{
+    const ch=chapters[Number(btn.dataset.tocIndex)];
+    $("#genChapter").value=chapterDisplayName(ch);
+    panel.querySelectorAll(".chapter-row").forEach(x=>x.style.outline="none");
+    btn.style.outline="2px solid var(--acc1)";
+    const hint=$("#chapterPickHint"); if(hint) hint.textContent=`Capitolo selezionato: ${chapterDisplayName(ch)}. Scegli il numero di micro-lezioni e genera.`;
+    $("#genChapter").scrollIntoView({behavior:"smooth",block:"center"});
+  });
+}
+function renderManualChapterEntry(book,message){
+  const panel=$("#chapterPanel"); panel.classList.remove("hidden");
+  panel.innerHTML=`<div class="chapter-head"><b>Indice dei capitoli</b><span style="font-size:10px;color:var(--mut)">non trovato</span></div>
+    <p class="chapter-note">${esc(message||"Non trovo un indice affidabile per questa edizione.")} Puoi incollare i titoli, uno per riga: non inventerò capitoli mancanti.</p>
+    <div class="chapter-manual"><textarea id="manualToc" placeholder="Capitolo 1 — ...&#10;Capitolo 2 — ..." aria-label="Elenco manuale dei capitoli">${esc(book.manualTocText||"")}</textarea><button type="button" class="btn ghost block" id="loadManualToc">Mostra i capitoli</button></div>`;
+  $("#loadManualToc").onclick=()=>{
+    const lines=$("#manualToc").value.split(/\n+/).map(x=>x.trim()).filter(Boolean);
+    book.manualTocText=$("#manualToc").value;
+    const chapters=lines.map(line=>({label:"",title:line,page:""}));
+    if(!chapters.length){toast("Incolla almeno un titolo di capitolo");return;}
+    renderChapterRows(book,chapters,"Indice inserito da te (non verificato dal catalogo)");
+  };
+}
+async function openLibraryJson(url,signal){
+  const res=await fetch(url,{signal});
+  if(!res.ok) throw new Error("Open Library non disponibile");
+  return res.json();
+}
+function tocFromEdition(entry){
+  const raw=entry?.table_of_contents;
+  if(!Array.isArray(raw)) return [];
+  return raw.map((x,i)=>({label:String(x.label||""),title:String(x.title||"").trim(),page:String(x.pagenum||""),level:Number(x.level)||1}))
+    .filter(x=>x.title||x.label).slice(0,250);
+}
+async function findOpenLibraryToc(book,signal){
+  const workKeys=[];
+  if(book.provider==="Open Library" && String(book.id||"").startsWith("/works/")) workKeys.push(book.id);
+  if(String(book.id||"").startsWith("/books/")){
+    try{const ed=await openLibraryJson(`https://openlibrary.org${book.id}.json`,signal);(ed.works||[]).forEach(w=>workKeys.push(w.key));
+      const chapters=tocFromEdition(ed); if(chapters.length) return {chapters,edition:ed};
+    }catch(e){if(e.name==="AbortError") throw e;}
+  }
+  for(const isbn of (book.isbns||[])){
+    try{
+      const q=new URLSearchParams({isbn,fields:"key,title,editions",limit:"3"});
+      const data=await openLibraryJson("https://openlibrary.org/search.json?"+q.toString(),signal);
+      for(const doc of data.docs||[]){
+        if(doc.key) workKeys.push(doc.key);
+        for(const ed of doc.editions?.docs||[]){
+          if(!ed.key) continue;
+          try{const full=await openLibraryJson(`https://openlibrary.org${ed.key}.json`,signal);const chapters=tocFromEdition(full);if(chapters.length)return {chapters,edition:full};
+            (full.works||[]).forEach(w=>workKeys.push(w.key));
+          }catch(e){if(e.name==="AbortError")throw e;}
+        }
+      }
+    }catch(e){if(e.name==="AbortError") throw e;}
+  }
+  if(!workKeys.length){
+    try{
+      const q=new URLSearchParams({q:[book.title,book.author].filter(Boolean).join(" "),fields:"key,title,author_name",limit:"5"});
+      const data=await openLibraryJson("https://openlibrary.org/search.json?"+q.toString(),signal);
+      for(const doc of data.docs||[]){
+        const sameTitle=norm(doc.title||"")===norm(book.title||"");
+        const sameAuthor=!book.author || (doc.author_name||[]).some(a=>norm(a)===norm(book.author));
+        if(doc.key && sameTitle && sameAuthor) workKeys.push(doc.key);
+      }
+    }catch(e){if(e.name==="AbortError")throw e;}
+  }
+  const unique=[...new Set(workKeys.filter(Boolean))];
+  const wantLang=(book.language||"it").toLowerCase().slice(0,2);
+  const langMap={it:"ita",en:"eng",es:"spa",fr:"fre",de:"ger",pt:"por"};
+  const wantedCode=langMap[wantLang]||wantLang;
+  let alternate=null;
+  for(const key of unique){
+    try{
+      const path=key.startsWith("/")?key:`/works/${key}`;
+      for(let offset=0;offset<=400;offset+=100){
+        const data=await openLibraryJson(`https://openlibrary.org${path}/editions.json?limit=100&offset=${offset}`,signal);
+        const rawEntries=data.entries||[];
+        const entries=rawEntries.map(ed=>{
+          const langs=(ed.languages||[]).map(l=>(l.key||"").toLowerCase());
+          const ids=[...(ed.isbn_10||[]),...(ed.isbn_13||[])];
+          return {ed,chapters:tocFromEdition(ed),sameLanguage:langs.some(l=>l.endsWith("/"+wantedCode)),exactIsbn:(book.isbns||[]).some(isbn=>ids.includes(isbn))};
+        }).filter(x=>x.chapters.length);
+        entries.sort((a,b)=>(Number(b.exactIsbn)*100+Number(b.sameLanguage)*20)-(Number(a.exactIsbn)*100+Number(a.sameLanguage)*20));
+        const exact=entries.find(x=>x.exactIsbn);
+        if(exact) return {chapters:exact.chapters,edition:exact.ed,sameLanguage:exact.sameLanguage,exact:true};
+        const same=entries.find(x=>x.sameLanguage);
+        if(same) return {chapters:same.chapters,edition:same.ed,sameLanguage:true,exact:false};
+        if(entries.length&&!alternate) alternate=entries[0];
+        if(rawEntries.length<100) break;
+      }
+    }catch(e){if(e.name==="AbortError")throw e;}
+  }
+  if(alternate) return {chapters:alternate.chapters,edition:alternate.ed,sameLanguage:false,exact:false};
+  return null;
+}
+let chapterLoadSeq=0,chapterLoadAbort=null;
+async function loadChapterPanel(book){
+  const panel=$("#chapterPanel"), seq=++chapterLoadSeq;
+  if(chapterLoadAbort) chapterLoadAbort.abort();
+  chapterLoadAbort=new AbortController(); book.workKey=book.id?.startsWith("/works/")?book.id:null;
+  panel.classList.remove("hidden");
+  panel.innerHTML='<div class="chapter-head"><b>Indice dei capitoli</b></div><p class="chapter-note">Cerco un indice dell\'edizione scelta…</p>';
+  try{
+    const result=await findOpenLibraryToc(book,chapterLoadAbort.signal);
+    if(seq!==chapterLoadSeq) return;
+    if(result?.chapters?.length){
+      book.editionKey=result.edition?.key||book.editionKey||"";
+      book.workKey=book.workKey||(result.edition?.works||[])[0]?.key||"";
+      const ed=result.edition||{};
+      const lang=(ed.languages||[]).map(x=>(x.key||"").split("/").pop()).filter(Boolean).join(", ");
+      const preferredLang=(book.language||"it").toLowerCase().slice(0,2);
+      book.tocWarning=result.sameLanguage===false?`Questo indice proviene da un’edizione con lingua diversa o non dichiarata rispetto alla lingua preferita (${preferredLang}). Verifica l’ordine dei capitoli prima di generare.`:"";
+      const source=`Open Library · ${ed.title||book.title}${ed.publish_date?" · "+ed.publish_date:""}${lang?" · lingua "+lang:""}`;
+      book.resolvedTocEdition=ed;
+      renderChapterRows(book,result.chapters,source);
+    }else{
+      renderManualChapterEntry(book,"Il catalogo non contiene un indice verificabile per questa edizione.");
+    }
+  }catch(e){
+    if(e.name==="AbortError"||seq!==chapterLoadSeq)return;
+    renderManualChapterEntry(book,"Non sono riuscito a raggiungere il catalogo degli indici.");
+  }
+}
+function startManualChapterList(message){
+  const title=$("#genTitle").value.trim(), author=$("#genAuthor").value.trim();
+  selectedGoogleBook={id:"manual-"+hash(title+author),provider:"Inserimento manuale",title,author,isbns:[],description:"",publishedDate:"",infoLink:""};
+  const saved=S.generated.slice().reverse().find(g=>g.sourceBook?.id===selectedGoogleBook.id&&g.sourceBook.chapterList?.length);
+  if(saved){
+    const chapters=saved.sourceBook.chapterList.map(title=>({label:"",title,page:""}));
+    renderChapterRows(selectedGoogleBook,chapters,saved.sourceBook.tocSource||"Indice inserito da te (salvato in precedenza)");
+    return;
+  }
+  renderManualChapterEntry(selectedGoogleBook,message||"Nessuna edizione trovata nei cataloghi.");
+}
 function renderBookResults(items,source){
   const box=$("#bookResults"); lastBookResults=items;
-  if(!items.length){box.innerHTML='<div class="hint">Nessun risultato: puoi comunque inserire titolo e autore manualmente.</div>';return;}
-  box.innerHTML=items.map((b,i)=>`<button type="button" class="book-result" data-book-index="${i}"><b>${esc(b.title)}</b><span>${esc(b.author||"Autore non indicato")}${b.publishedDate?" · "+esc(b.publishedDate.slice(0,4)):""} · ${esc(source)}</span>${b.description?`<span class="bdesc">${esc(b.description.slice(0,170))}${b.description.length>170?"…":""}</span>`:""}</button>`).join("");
+  if(!items.length){box.innerHTML='<div class="hint">Nessuna edizione trovata. Puoi inserire i dati a mano e caricare un indice.</div><button type="button" class="btn ghost block" id="manualChaptersStart" style="margin-top:7px">Inserisci indice manualmente</button>';$("#chapterPanel").classList.add("hidden");$("#manualChaptersStart").onclick=()=>startManualChapterList("Nessuna edizione trovata: aggiungi l’indice del tuo esemplare.");return;}
+  box.innerHTML=items.map((b,i)=>{
+    const meta=[b.author||"Autore non indicato",b.publisher,b.publishedDate?b.publishedDate.slice(0,4):"",b.language?b.language.toUpperCase():"",b.isbns?.[0]?"ISBN "+b.isbns[0]:"",source].filter(Boolean).join(" · ");
+    return `<button type="button" class="book-result" data-book-index="${i}"><b>${esc(b.title)}</b><span>${esc(meta)}</span>${b.description?`<span class="bdesc">${esc(b.description.slice(0,170))}${b.description.length>170?"…":""}</span>`:""}</button>`;
+  }).join("");
   box.querySelectorAll("[data-book-index]").forEach(btn=>btn.onclick=()=>{
     selectedGoogleBook=lastBookResults[Number(btn.dataset.bookIndex)];
+    selectedGoogleBook.provider=source;
     $("#genTitle").value=selectedGoogleBook.title;
-    $("#genAuthor").value=selectedGoogleBook.author;
-    box.innerHTML=`<div class="book-selected">✓ ${esc(source)}: ${esc(selectedGoogleBook.title)}${selectedGoogleBook.author?" · "+esc(selectedGoogleBook.author):""}. Inserisci il capitolo qui sotto.</div>`;
+    $("#genAuthor").value=selectedGoogleBook.author||"";
+    box.innerHTML=`<div class="book-selected">✓ ${esc(source)}: ${esc(selectedGoogleBook.title)}${selectedGoogleBook.author?" · "+esc(selectedGoogleBook.author):""}. Ora scegli un capitolo.</div>`;
+    loadChapterPanel(selectedGoogleBook);
   });
 }
 async function searchOpenLibrary(query,signal){
@@ -1441,7 +1772,7 @@ async function searchGoogleBooks(query){
   box.innerHTML='<div class="hint">Cerco le edizioni…</div>';
   try{
     const params=new URLSearchParams({q:query.trim(),maxResults:"6",printType:"books",orderBy:"relevance",
-      fields:"totalItems,items(id,volumeInfo(title,authors,description,publishedDate,infoLink,previewLink,categories),accessInfo(publicDomain,viewability))"});
+      fields:"totalItems,items(id,volumeInfo(title,authors,description,publishedDate,infoLink,previewLink,categories,industryIdentifiers,language,publisher),accessInfo(publicDomain,viewability))"});
     const res=await fetch("https://www.googleapis.com/books/v1/volumes?"+params.toString(),{signal:bookSearchAbort.signal});
     if(!res.ok) throw new Error("Google Books non disponibile");
     const data=await res.json(); if(seq!==bookSearchSeq) return;
@@ -1451,7 +1782,9 @@ async function searchGoogleBooks(query){
       description:String(x.volumeInfo?.description||"").slice(0,5000),
       publishedDate:x.volumeInfo?.publishedDate||"",
       infoLink:x.volumeInfo?.infoLink||"",previewLink:x.volumeInfo?.previewLink||"",
-      publicDomain:!!x.accessInfo?.publicDomain,viewability:x.accessInfo?.viewability||"",provider:"Google Books"
+      publicDomain:!!x.accessInfo?.publicDomain,viewability:x.accessInfo?.viewability||"",provider:"Google Books",
+      language:x.volumeInfo?.language||"",publisher:x.volumeInfo?.publisher||"",
+      isbns:(x.volumeInfo?.industryIdentifiers||[]).filter(v=>/^ISBN_/.test(v.type||"")).map(v=>String(v.identifier||"").replace(/[^0-9X]/gi,""))
     }));
     if(books.length){renderBookResults(books,"Google Books");return;}
     const fallback=await searchOpenLibrary(query.trim(),bookSearchAbort.signal);
@@ -1463,16 +1796,22 @@ async function searchGoogleBooks(query){
       if(seq===bookSearchSeq) renderBookResults(fallback,"Open Library");
     }catch(e2){
       if(e2.name==="AbortError"||seq!==bookSearchSeq) return;
-      box.innerHTML='<div class="hint">Cataloghi non raggiungibili. Puoi comunque inserire titolo e autore a mano.</div>';
+      box.innerHTML='<div class="hint">Cataloghi non raggiungibili. Inserisci i dati a mano e puoi comunque caricare un indice dei capitoli.</div><button type="button" class="btn ghost block" id="manualChaptersStart" style="margin-top:7px">Inserisci indice manualmente</button>';
+      $("#manualChaptersStart").onclick=()=>startManualChapterList("Cataloghi non raggiungibili: aggiungi l’indice del tuo esemplare.");
     }
   }
 }
-$("#genTitle").addEventListener("input",e=>{
-  selectedGoogleBook=null;
-  clearTimeout(bookSearchTimer);
-  const q=e.target.value.trim();
+function scheduleBookSearch(){
+  selectedGoogleBook=null; $("#chapterPanel").classList.add("hidden");
+  clearTimeout(bookSearchTimer); if(bookSearchAbort) bookSearchAbort.abort(); bookSearchSeq++;
+  const title=$("#genTitle").value.trim(), author=$("#genAuthor").value.trim();
+  const q=[title,author].filter(Boolean).join(" ");
+  $("#bookResults").innerHTML=title.length>=3?'<div class="hint">Aggiorno la ricerca titolo/autore…</div>':"";
+  if(title.length<3) return;
   bookSearchTimer=setTimeout(()=>searchGoogleBooks(q),450);
-});
+}
+$("#genTitle").addEventListener("input",scheduleBookSearch);
+$("#genAuthor").addEventListener("input",scheduleBookSearch);
 async function generateBook(){
   const title=$("#genTitle").value.trim(), author=$("#genAuthor").value.trim();
   const chapter=$("#genChapter").value.trim(), notes=$("#genNotes").value.trim();
@@ -1500,7 +1839,10 @@ async function generateBook(){
       await sleep(700); stepOk(2); await sleep(500); stepOk(3);
     }
     book.chapter=chapter;
-    if(selectedGoogleBook) book.sourceBook={id:selectedGoogleBook.id,publishedDate:selectedGoogleBook.publishedDate,infoLink:selectedGoogleBook.infoLink,description:selectedGoogleBook.description};
+    if(selectedGoogleBook){
+      const isbns=selectedGoogleBook.isbns||[];
+      book.sourceBook={id:selectedGoogleBook.id,provider:selectedGoogleBook.provider||"",isbn:isbns[0]||"",isbns,title:selectedGoogleBook.title,author:selectedGoogleBook.author,language:selectedGoogleBook.language||"",publisher:selectedGoogleBook.publisher||"",publishedDate:selectedGoogleBook.publishedDate,infoLink:selectedGoogleBook.infoLink,description:selectedGoogleBook.description,workKey:selectedGoogleBook.workKey||"",editionKey:selectedGoogleBook.editionKey||"",tocSource:selectedGoogleBook.tocSource||"",chapterList:(selectedGoogleBook.tocChapters||[]).map(chapterDisplayName)};
+    }
     S.generated.push(book); Store.save();
     await sleep(450);
     closeModal("genModal");
@@ -1571,6 +1913,7 @@ Regole: micro-spiegazioni e sintesi originali, non lettura integrale. Ogni lezio
 
 /* ---------- EVENTI ---------- */
 $("#createBtn").onclick=openGen;
+$("#newFolderBtn").onclick=()=>openFolderCreate();
 $("#genBtn").onclick=generateBook;
 $("#searchInput").addEventListener("input",e=>renderBooks(e.target.value));
 $("#audioBtn").onclick=()=>{

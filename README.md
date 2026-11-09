@@ -1,6 +1,6 @@
 # Sfoglia — prototipo microlearning
 
-Web app mobile-first con feed verticale; dentro ogni micro-lezione le schede si sfogliano orizzontalmente come un carosello fotografico, senza avanzamento automatico. Dal pulsante **Mappa** si apre, quando serve, una mappa SVG costruita dalle frasi della micro-lezione e aggiornata in base alla slide corrente. È un visual didattico generato localmente dal testo, senza chiamate a un generatore d'immagini esterno. Un mini quiz aiuta a fissare i concetti. La voce del browser si può mettere in pausa e riprendere sullo stesso punto. Include ricerca libri, salvataggi e progressi sul dispositivo. Le lezioni sono create dall'app; gli utenti non caricano video.
+Web app mobile-first con feed verticale; dentro ogni micro-lezione le schede si sfogliano orizzontalmente come un carosello fotografico, senza avanzamento automatico. Dal pulsante **Mappa** si apre, quando serve, una mappa SVG costruita dalle frasi della micro-lezione e aggiornata in base alla slide corrente. È un visual didattico generato localmente dal testo, senza chiamate a un generatore d'immagini esterno. Un mini quiz aiuta a fissare i concetti. La voce del browser si può mettere in pausa e riprendere sullo stesso punto. Include ricerca libri, micro-lezioni salvabili e organizzabili in cartelle (anche una cartella rapida per ciascun libro) e progressi sul dispositivo. Le lezioni sono create dall'app; gli utenti non caricano video.
 
 ## Avvio
 
@@ -18,11 +18,12 @@ Il progetto è una PWA. Per installarlo correttamente su Android o iPhone, pubbl
 
 ## Cercare e generare su un capitolo
 
-1. Premi **Crea** e scrivi titolo o autore: l'app prova a trovare le edizioni su Google Books e usa Open Library come alternativa se il primo catalogo non risponde.
-2. Scegli l'edizione giusta (oppure inserisci titolo/autore a mano).
-3. Scrivi il nome/numero del capitolo o l'argomento. I cataloghi servono a identificare il libro, non forniscono automaticamente il testo integrale del capitolo.
-4. Facoltativamente aggiungi appunti brevi tuoi (massimo 2.500 caratteri) per ancorare la spiegazione al materiale corretto.
-5. Con una chiave Gemini, genera le micro-lezioni. Senza chiave, l'app produce una guida demo generica e la indica come tale: non spaccia una guida per riassunto fedele.
+1. Premi **Crea** e inserisci titolo e, se possibile, autore: la ricerca usa entrambi per distinguere opere ed edizioni.
+2. Seleziona l'edizione corretta dai risultati. L'app cerca un indice dei capitoli verificabile tramite identificativi/edizioni Open Library; quando l'edizione ha un indice, mostra i capitoli selezionabili e segnala quelli per cui esistono già micro-lezioni salvate.
+3. Tocca un capitolo per selezionarlo e genera il relativo gruppo di micro-lezioni. Le generazioni restano separate per capitolo, così puoi procedere uno alla volta e controllare le quote gratuite Gemini.
+4. Se il catalogo non contiene l'indice, puoi incollare i titoli dei capitoli, uno per riga, oppure scrivere un capitolo/argomento manualmente. L'app non inventa un indice spacciandolo per quello dell'edizione.
+5. Facoltativamente aggiungi appunti brevi tuoi (massimo 2.500 caratteri) per ancorare la spiegazione al materiale corretto. I cataloghi non forniscono automaticamente il testo integrale del capitolo.
+6. Con una chiave Gemini, genera le micro-lezioni. Senza chiave, l'app produce una guida demo generica e la indica come tale: non spaccia una guida per riassunto fedele.
 
 ## Costi, privacy e limiti
 
